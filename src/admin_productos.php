@@ -79,7 +79,7 @@ $productos = $db->getProductos();
                 </thead>
                 <tbody>
 
-                    <? foreach ($productos as $producto) { ?>
+                    <?php foreach ($productos as $producto) { ?>
 
 
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -104,7 +104,7 @@ $productos = $db->getProductos();
                             </td>
                         </tr>
 
-                    <? } ?>
+                    <?php } ?>
 
                 </tbody>
             </table>

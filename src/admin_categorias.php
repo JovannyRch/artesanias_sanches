@@ -75,7 +75,7 @@ $categorias = $db->getCategorias(); ?>
                 </thead>
                 <tbody>
 
-                    <? foreach ($categorias as $categoria) { ?>
+                    <?php foreach ($categorias as $categoria) { ?>
 
 
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -90,7 +90,7 @@ $categorias = $db->getCategorias(); ?>
                             </td>
                         </tr>
 
-                    <? } ?>
+                    <?php } ?>
 
                 </tbody>
             </table>
