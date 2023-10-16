@@ -7,7 +7,7 @@ class Database
 
     function __construct()
     {
-        $server = 'localhost';
+        $server = 'db';
         $username = 'root';
         $password = '';
         $database = 'tienda_virtual';
