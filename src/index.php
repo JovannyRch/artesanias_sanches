@@ -2,6 +2,10 @@
 require './database.php';
 session_start();
 
+
+
+
+
 $db = new Database();
 
 $productos = $db->getProductos();
