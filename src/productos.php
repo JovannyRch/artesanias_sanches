@@ -1,122 +1,317 @@
-<?php
-require './database.php';
-session_start();
-
-$db = new Database();
-
-$productos = $db->getProductos();
-
-
-
-?>
-
+<html>
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Administrar Productos </title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/custom.css">
+  <script src="assets/js/vue.js"></script>
 </head>
 
-<body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen">
+<body>
+  <div id="app">
 
-    <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="./index.php" class="flex items-center">
-                <img src="./assets/logo.jpeg" class="h-8 mr-3" alt="logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                    Artesanías de barro Sánchez
-                </span>
-            </a>
-            <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
-            </button>
-            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-                <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-
-                    <li>
-                        <a href="./index.php" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">
-                            Inicio
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="./productos.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Productos
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./categorias.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Categorías
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./carrito.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 902.86 902.86" xml:space="preserve">
-                                <g>
-                                    <g>
-                                        <path d="M671.504,577.829l110.485-432.609H902.86v-68H729.174L703.128,179.2L0,178.697l74.753,399.129h596.751V577.829z
-			 M685.766,247.188l-67.077,262.64H131.199L81.928,246.756L685.766,247.188z" />
-                                        <path d="M578.418,825.641c59.961,0,108.743-48.783,108.743-108.744s-48.782-108.742-108.743-108.742H168.717
-			c-59.961,0-108.744,48.781-108.744,108.742s48.782,108.744,108.744,108.744c59.962,0,108.743-48.783,108.743-108.744
-			c0-14.4-2.821-28.152-7.927-40.742h208.069c-5.107,12.59-7.928,26.342-7.928,40.742
-			C469.675,776.858,518.457,825.641,578.418,825.641z M209.46,716.897c0,22.467-18.277,40.744-40.743,40.744
-			c-22.466,0-40.744-18.277-40.744-40.744c0-22.465,18.277-40.742,40.744-40.742C191.183,676.155,209.46,694.432,209.46,716.897z
-			 M619.162,716.897c0,22.467-18.277,40.744-40.743,40.744s-40.743-18.277-40.743-40.744c0-22.465,18.277-40.742,40.743-40.742
-			S619.162,694.432,619.162,716.897z" />
-                                    </g>
-                                </g>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./logout.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Cerrar sesión
-                        </a>
-                    </li>
-                </ul>
+    <div class="container">
+      <div class="table-wrapper">
+        <div class="table-title">
+          <div class="row">
+            <div class="col-sm-6">
+              <h2>Administrar <b>Productos</b></h2>
             </div>
+            <div class="col-sm-6" style="align-content: flex-end;">
+              <br><br>
+              <!-- Button trigger modal -->
+              <button @click="isEditar = false" type="button" class="btn btn-success " data-toggle="modal"
+                data-target="#nuevoProducto">
+                <i class="material-icons">&#xE147;</i> <span>Agregar nuevo producto</span>
+              </button>
+
+              <!-- Modal Crear producto-->
+              <div class="modal fade" id="nuevoProducto" tabindex="-1" role="dialog" aria-labelledby="khkj"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+
+                      <h5 class="modal-title" v-if="!isEditar">Agregar nuevo producto</h5>
+                      <h5 class="modal-title" v-if="isEditar">Editar producto</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="nombreP">Nombre producto</label>
+                        <input v-model="producto.nombre" type="text" name="nombreP" id="nombreP" class="form-control"
+                          placeholder="Nombre del producto" aria-describedby="">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="precioP">Precio</label>
+                        <input type="number" name="precioP" id="precioP" v-model="producto.precio" class="form-control"
+                          placeholder="Precio del producto" aria-describedby="">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="existenciasP">Existencias</label>
+                        <input v-model="producto.existencias" type="number" name="existenciasP" id="existenciasP"
+                          class="form-control" placeholder="Existencias del producto" aria-describedby="">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="rutaP">Ruta Imagen</label>
+                        <input v-model="producto.ruta_imagen" type="text" name="rutaP" id="rutaP" class="form-control"
+                          placeholder="Ingrese ruta de la imagen" aria-describedby="">
+                      </div>
+
+
+                      <div class="form-group">
+                        <label for="categoriP">Categorias</label>
+                        <select v-model="producto.id_categoria" class="form-control" name="categoriP" id="categoriP">
+                          <option :value="c.id" v-for="c in categorias">
+                            {{c.nombre}}
+                          </option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label for="espec">Especificaciones</label>
+                        <textarea v-model="producto.especificaciones" class="form-control" name="espec" id="espec"
+                          rows="3"></textarea>
+                      </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                      <button type="button" class="btn btn-primary" v-if="!isEditar"
+                        @click="crearProducto()">Crear</button>
+                      <button type="button" class="btn btn-primary" v-if="isEditar" @click="guardarProducto()">Guardar
+                        cambios</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
         </div>
-    </nav>
-
-    <div class="container p-8  gap-8 w-full">
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <?php foreach ($productos as $producto) { ?>
-
-
-
-                <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <img class="p-8 rounded-t-lg" src="<?= $producto['ruta_imagen'] ?>" alt="product image" />
-                    </a>
-                    <div class="px-5 pb-5">
-                        <a href="#">
-                            <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                <?= $producto['nombre'] ?>
-                            </h5>
-                        </a>
-
-                        <div class="flex items-center justify-between">
-                            <span class="text-3xl font-bold text-gray-900 dark:text-white">
-                                $<?= $producto['precio'] ?>
-                            </span>
-                            <a href="./comprar.php?id=<?= $producto['id'] ?>" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar al carrito</a>
-                        </div>
+        <div class='col-sm-4 pull-right'>
+          <div id="custom-search-input">
+            <div class="input-group col-md-12">
+              <input type="text" class="form-control" v-model="valor" placeholder="Buscar" id="q" />
+              <span class="input-group-btn">
+                <button class="btn btn-info" type="button" @click="getProductos">
+                  <span class="glyphicon glyphicon-search"></span>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class='col-sm-4 pull-right'>
+                    <div class="form-group">
+                        <select v-model="campo" class="form-control" name="campo" id="campo">
+                            <option v-for="c in campos" :value="c">
+                                {{c}}
+                            </option>
+                        </select>
                     </div>
                 </div>
+        <br><br>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">&nbsp;ID</th>
+              <th scope="col">&nbsp;Nombre</th>
+              <th scope="col">&nbsp;Especificaciones</th>
+              <th scope="col">&nbsp;Precio</th>
+              <th scope="col">&nbsp;Categoria</th>
+              <th scope="col">&nbsp;Existencias</th>
+              <th scope="col">&nbsp;Ruta_imagen</th>
+              <th scope="col">&nbsp;Imagen</th>
 
-            <?php } ?>
+              <th scope="col">&nbsp;
+                Acciones
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="p in productos">
+              <td>{{p.id}}</td>
+              <td>{{p.nombre}}</td>
+              <td>{{p.especificaciones}}</td>
+              <td>{{p.precio}}</td>
+              <td>{{p.categoria}}</td>
+              <td>{{p.existencias}}</td>
+              <td>
+                {{p.ruta_imagen}}
+              </td>
+              <td>
+                <img :src="p.ruta_imagen" width="80px">
+              </td>
+              <td>
+                <button class="btn btn-danger" @click="eliminarProducto(p)">
+                  <span class="glyphicon glyphicon-remove-sign"></span>
+                </button>
+                <button @click="editarProducto(p)" class="btn btn-warning" data-toggle="modal"
+                  data-target="#nuevoProducto">
+                  <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+              </td>
+            </tr>
 
-
-        </div>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <script>
 
+      var app = new Vue(
+        {
+          el: '#app',
+          data: {
+            productos: [],
+            categorias: [],
+            producto: {
+              nombre: '',
+              ruta_imagen: '',
+              especificaciones: '',
+              precio: 0,
+              existencias: 0,
+              ruta_imagen: '',
+              id_categoria: ''
+            },
+            isEditar: false,
+            campo: 'nombre',
+                        valor: '',
+                        campos: [
+                            'nombre',
+                            'especificaciones',
+                            'precio',
+                            'id_categoria',
+                            'existencias',
+                            'ruta_imagen'
+                        ]
+          },
+          created: function () {
+            this.getProductos();
+            this.getCategorias();
+          },
+          methods: {
+            getProductos() {
+              console.log("campo:", this.campo, " => valor", this.valor);
+              $.ajax({
+                type: "POST",
+                url: 'controladores/api.php',
+                data: {
+                  servicio: "getProductos",
+                  campo: this.campo,
+                  valor: this.valor
+                },
+                success: function (respuesta) {
+                  respuesta = JSON.parse(respuesta);
+                  app.productos = respuesta;
+                }
+              });
+            },
+            eliminarProducto(producto) {
+              var respuesta = confirm("¿Estas seguro de eliminar el producto: '" + producto.nombre + "' ?");
+              if (respuesta) {
+                $.ajax({
+                  type: "POST",
+                  url: 'controladores/api.php',
+                  data: {
+                    servicio: "borrarProducto",
+                    id: producto.id
+                  },
+                  success: function (respuesta) {
+
+                    respuesta = JSON.parse(respuesta);
+                    app.getProductos = respuesta;
+                  }
+                });
+              }
+            },
+            getCategorias() {
+              $.ajax({
+                type: "POST",
+                url: 'controladores/api.php',
+                data: {
+                  servicio: "getCategorias",
+                },
+                success: function (respuesta) {
+                  respuesta = JSON.parse(respuesta);
+                  app.categorias = respuesta;
+                }
+              });
+            },
+            crearProducto() {
+              $.ajax({
+                type: "POST",
+                url: 'controladores/api.php',
+                data: {
+                  servicio: "saveProducto",
+                  producto: this.producto
+                },
+                success: function (respuesta) {
+                  $('#nuevoProducto').modal('toggle');
+                  this.resetProducto();
+                  app.getProductos();
+
+                }
+              });
+            },
+            resetProducto() {
+              this.producto = {
+                nombre: '',
+                ruta_imagen: '',
+                especificaciones: '',
+                precio: 0,
+                existencias: 0,
+                ruta_imagen: '',
+                id_categoria: ''
+              };
+            },
+            editarProducto(producto) {
+              this.isEditar = true;
+              this.producto = Object.assign({}, producto);
+            },
+            guardarProducto() {
+              $.ajax({
+                type: "POST",
+                url: 'controladores/api.php',
+                data: {
+                  servicio: "actualizarProducto",
+                  producto: this.producto,
+                  id: this.producto.id,
+                },
+                success: function (respuesta) {
+                  app.getProductos();
+                  $('#nuevoProducto').modal('toggle');
+                  this.resetProducto();
+                }
+              });
+            }
+          }
+        }
+      );
+
+
+    </script>
 </body>
+
+</html>
 
 </html>

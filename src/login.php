@@ -1,75 +1,90 @@
 <?php
-require './database.php';
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+session_start();
 
-    if (isset($_POST['email'], $_POST['password'])) {
-
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $db = new Database();
-        $user = $db->login($password, $email);
-
-
-        if ($user) {
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            if ($user['tipo_usuario'] == 1) {
-                header('Location: index.php');
-            } else {
-                header('Location: admin.php');
-            }
-        } else {
-            echo 'Usuario o contraseña incorrectos';
-        }
-    }
+if ($_SESSION) {
+  header('index.php');
 }
+require 'database.php';
+require 'Model.php';
+
+if ($_POST) {
+  $password = $_POST['password'];
+  $email = $_POST['email'];
+  $modelo = new Model();
+  if ($password && $email) {
+    $usuario = $modelo->login($password, $email);
+    $id_usuario = $usuario['id'];
+
+    if ($id_usuario) {
+      $_SESSION['user_id'] = $id_usuario;
+      $_SESSION['email'] = $email;
+      $mensaje = "Datos correctos";
+
+      $location = "Location: index.php";
+      if (intval($usuario['tipo_usuario']) == 0) {
+        $location = "Location: index_admin.php";
+      }
+      header($location);
+    } else {
+      $mensaje = "Datos inválidos";
+    }
+  } else {
+    echo "Ingresa los datos";
+  }
+}
+
+
+
+
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+
+  <style type="text/css">
+    body {
+      background: #f9f2e7;
+
+    }
+  </style>
+
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
 
-<body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen flex items-center justify-center">
+<body>
+
+  <img src="img/logo1.jpg">
+
+  <h1>Inicia Sesión</h1>
+  <span>
+
+    <div style="margin-bottom: 4px;">o</div>
+
+    <a href="signup.php"> <input type="submit" value="Registrate"></a>
+  </span>
+
+  <?php if (!empty($mensaje)) : ?>
+    <p> <?= $mensaje ?></p>
+  <?php endif; ?>
+  <form action="login.php" method="POST">
+
+    <input name="email" type="email" placeholder="Escribe tu correo">
+    <input name="password" type="password" placeholder="Escribe tu contraseña">
+    <input type="submit" value="Entrar">
 
 
-    <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form class="space-y-6" method="POST" action="./login.php">
-
-            <div class="flex justify-center flex-col items-center">
-                <h2 class="font-bold text-2xl text-center mb-2">
-                    Artesanías de barro Sánchez
-                </h2>
-                <img src="./assets/logo.jpeg" class="h-36" alt="Flowbite Logo" />
-            </div>
-            <h5 class="text-xl font-medium text-gray-900 dark:text-white">Inicio de sesión</h5>
-            <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="nombre@compania.com" required>
-            </div>
-            <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
-            </div>
-
-            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Ingresar
-            </button>
-            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                ¿Aún no estás registrado? <a href="./signup.php" class="text-blue-700 hover:underline dark:text-blue-500">
-                    Crear cuenta
-                </a>
-            </div>
-        </form>
-    </div>
+    <?php if (!empty($mensaje)) : ?>
+      <p> <?= $mensaje ?></p>
+    <?php endif; ?>
 
 
+  </form>
 </body>
 
 </html>

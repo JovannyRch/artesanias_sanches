@@ -1,160 +1,240 @@
 <?php
-require './database.php';
-session_start();
 
+  session_start();
 
-
-
-
-$db = new Database();
-
-$productos = $db->getProductos();
-
-
-
-$categorias = $db->getCategorias();
-
-$id_categoria = null;
-
-if (isset($_GET['id_categoria'])) {
-    $id_categoria = $_GET['id_categoria'];
-    $productos = $db->getProductosPorCategoria($id_categoria);
-}
-
+  if (isset($_SESSION['user_id'])) {
+   
+  }else{
+    header("Location: login.php");
+  }
 ?>
-
-
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8">
+  <style type="text/css">
+.container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .content-left {
+            flex: 1;
+            padding-right: 2rem;
+        }
+
+        .content-right {
+            flex: 1;
+            max-width: 50%;
+        }
+
+        .content-right img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .button {
+            display: block;
+            padding: 0.5rem 1rem;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+  </style>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>INICIO</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
+  <script src="assets/js/vue.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
 </head>
 
-<body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen">
-
-    <nav class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
-        <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-            <a href="./index.php" class="flex items-center">
-                <img src="./assets/logo.jpeg" class="h-8 mr-3" alt="logo" />
-                <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-                    Artesanías de barro Sánchez
-                </span>
-            </a>
-            <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-default" aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
-                </svg>
-            </button>
-            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-                <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-
-                    <li>
-                        <a href="./index.php" class="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500" aria-current="page">
-                            Inicio
-                        </a>
-                    </li>
+<body style="background-color:#f9f2e7;">
+  <div id="app">
 
 
-                    <li>
-                        <a href="./carrito.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            <svg fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="30px" height="30px" viewBox="0 0 902.86 902.86" xml:space="preserve">
-                                <g>
-                                    <g>
-                                        <path d="M671.504,577.829l110.485-432.609H902.86v-68H729.174L703.128,179.2L0,178.697l74.753,399.129h596.751V577.829z
-			 M685.766,247.188l-67.077,262.64H131.199L81.928,246.756L685.766,247.188z" />
-                                        <path d="M578.418,825.641c59.961,0,108.743-48.783,108.743-108.744s-48.782-108.742-108.743-108.742H168.717
-			c-59.961,0-108.744,48.781-108.744,108.742s48.782,108.744,108.744,108.744c59.962,0,108.743-48.783,108.743-108.744
-			c0-14.4-2.821-28.152-7.927-40.742h208.069c-5.107,12.59-7.928,26.342-7.928,40.742
-			C469.675,776.858,518.457,825.641,578.418,825.641z M209.46,716.897c0,22.467-18.277,40.744-40.743,40.744
-			c-22.466,0-40.744-18.277-40.744-40.744c0-22.465,18.277-40.742,40.744-40.742C191.183,676.155,209.46,694.432,209.46,716.897z
-			 M619.162,716.897c0,22.467-18.277,40.744-40.743,40.744s-40.743-18.277-40.743-40.744c0-22.465,18.277-40.742,40.743-40.742
-			S619.162,694.432,619.162,716.897z" />
-                                    </g>
-                                </g>
-                            </svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="./logout.php" class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
-                            Cerrar sesión
-                        </a>
-                    </li>
-                </ul>
-            </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">PEÑALOZA</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.php">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item" v-for="categoria in categorias">
+              <a class="nav-link" :href="'categoria.php?id='+categoria.id">{{categoria.nombre}}</a>
+            </li>
+
+            <li>
+              <a href="carrito.php">
+                <i class="fa fa-shopping-cart fa-2x"></i> {{cantidadCarrito}}
+              </a>
+            </li>
+
+
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" value="<?=$_SESSION['email'];?>" type="text" readonly
+              aria-label="Search">
+            <a href="logout.php" class="btn btn-outline-success my-2 my-sm-0" type="button">Cerrar Sesión</a>
+          </form>
         </div>
+      </div>
     </nav>
-
-    <div class="container p-8  gap-8 w-full">
-
-        <div class="max-w-md mb-4">
-            <label for="categorias" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoría</label>
-            <select onchange="handleOnChange()" id="categorias" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option <?= !isset($id_categoria) ? 'selected' : '' ?> value="-1">Todas las categorías</option>
-
-                <?php foreach ($categorias as $categoria) { ?>
-                    <option <?= isset($id_categoria) && $id_categoria == $categoria['id'] ? 'selected' : '' ?> value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
-                <?php } ?>
-            </select>
-
+    <br> <br>
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" height="300px" src="img/banner.png" alt="First slide">
         </div>
+        <div class="carousel-item">
+          <img class="d-block w-100" height="300px" src="img/banner2.png" alt="Second slide">
+        </div>
+      
+      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+   
+   
+    <div class="container" style="background-color:#faa191;">
 
-        <?php if (sizeof($productos) == 0) { ?>
-            <div class="w-full p-4 h-60 flex items-center justify-center text-center bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
-                <h5 class="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
-                    No hay productos
-                </h5>
-            </div>
-        <?php } ?>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-
-            <?php foreach ($productos as $producto) { ?>
-
-
-
-                <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <img class="p-8 rounded-t-lg" src="<?= $producto['ruta_imagen'] ?>" alt="product image" />
-                    </a>
-                    <div class="px-5 pb-5">
-                        <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                            <?= $producto['nombre'] ?>
-                        </h5>
-                        <h6>
-                            <?= $producto['categoria'] ?>
-                        </h6>
-
-                        <div class="flex items-center justify-between">
-                            <span class="text-3xl font-bold text-gray-900 dark:text-white">
-                                $<?= $producto['precio'] ?>
-                            </span>
-                            <a href="./comprar.php?id=<?= $producto['id'] ?>" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar al carrito</a>
-                        </div>
-                    </div>
-                </div>
-
-            <?php } ?>
-
-
+   
+        <div class="content-left">
+            <div class="title">Bienvenido</div>
+            La paletería y nevería nació de la pasión por ofrecer opciones refrescantes y deliciosas a la comunidad de Santiaguito Maxdá, Timilpan, Estado de México. Ahora planeamos llegar a muchos lugares...
+            
+            
+            <a href="https://maps.app.goo.gl/uXutrykGCZuhkRvo7"  target="_blank" class="button">Conocer ubicación</a>
+        </div>
+        <div class="content-right">
+            <img src="img/inicio.png" alt="Imagen de helado">
         </div>
     </div>
 
-    <script>
-        function handleOnChange() {
-            const id_categoria = document.getElementById('categorias').value;
-            if (id_categoria == -1) {
-                window.location.href = `./index.php`;
-                return
-            };
-            window.location.href = `./index.php?id_categoria=${id_categoria}`;
+
+      </div>
+      <?php require 'partials/footer.php' ?>
+    </div>
+  </div>
+  </footer>
+
+  </div>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap-4.3.1.js"></script>
+  <script src="assets/js/notify.js"></script>
+
+  <script>
+
+    let app = new Vue({
+      el: '#app',
+      data: {
+        productos: [],
+        categorias: [],
+        cantidadCarrito: 0,
+
+        id_usuario: "<?=$_SESSION['user_id']?>"
+      },
+      created: function () {
+        this.getCategorias();
+        this.getProductos();
+        this.fcantidadCarrito();
+      },
+      methods: {
+
+        addCarrito(id_producto) {
+          $.ajax({
+            type: "POST",
+            url: 'controladores/api.php',
+            data: {
+              servicio: "agregarCarrito",
+              id_usuario: this.id_usuario,
+              id_producto: id_producto
+            },
+            success: function (respuesta) {
+              app.cantidadCarrito = parseInt(respuesta);
+              $.notify(
+                "Se ha agregado el producto a tu carrito", {
+                position: "right top",
+                className: "success"
+              }
+              );
+            }
+          });
+        },
+
+        fcantidadCarrito() {
+          $.ajax({
+            type: "POST",
+            url: 'controladores/api.php',
+            data: {
+              servicio: "getCantidadCarrito",
+              id_usuario: this.id_usuario
+            },
+            success: function (respuesta) {
+              app.cantidadCarrito = parseInt(respuesta);
+            }
+          });
+
+        },
+        getProductos() {
+          $.ajax({
+            type: "POST",
+            url: 'controladores/api.php',
+            data: {
+              servicio: "getProductos",
+              campo: '',
+              valor: ''
+            },
+            success: function (respuesta) {
+              respuesta = JSON.parse(respuesta);
+              app.productos = respuesta;
+
+
+            }
+          });
+        },
+        getCategorias() {
+          $.ajax({
+            type: "POST",
+            url: 'controladores/api.php',
+            data: {
+              servicio: "getCategorias",
+            },
+            success: function (respuesta) {
+              respuesta = JSON.parse(respuesta);
+              app.categorias = respuesta;
+            }
+          });
         }
-    </script>
+      }
+    });
+
+
+  </script>
 
 </body>
 
