@@ -13,18 +13,18 @@ if ($_POST) {
   $modelo = new Model();
   if ($password && $email) {
     $usuario = $modelo->login($password, $email);
-    $id_usuario = $usuario['id'];
 
-    if ($id_usuario) {
-      $_SESSION['user_id'] = $id_usuario;
+    if ($usuario) {
+      $_SESSION['user_id'] = $usuario['id'];
       $_SESSION['email'] = $email;
       $mensaje = "Datos correctos";
 
-      $location = "Location: index.php";
       if (intval($usuario['tipo_usuario']) == 0) {
-        $location = "Location: index_admin.php";
+        //Go to index_admin.php  without using header function
+        echo "<script> window.location='index_admin.php'; </script>";
+      } else {
+        header("Location: index.php");
       }
-      header($location);
     } else {
       $mensaje = "Datos inválidos";
     }

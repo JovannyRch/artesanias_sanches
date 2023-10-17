@@ -1,24 +1,29 @@
 <?php
 
 require 'database.php';
+require 'Model.php';
+
+$model = new Model();
+
 
 $message = '';
 if (!empty($_POST['nombre']) && !empty($_POST['email']) && !empty($_POST['password'])) {
 
-
-
-  $sql = "INSERT INTO usuarios (nombre,email,password) 
-    VALUES (:nombre,:email,:password)";
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam(':nombre', $_POST['nombre']);
-  $stmt->bindParam(':email', $_POST['email']);
-  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-  $stmt->bindParam(':password', $password);
-
-  if ($stmt->execute()) {
-    $message = 'Usuario creado exitosamente';
+  if ($model->existeUsuario($_POST['email'])) {
+    $message = 'El correo ya existe';
   } else {
-    $message = 'Ocurrió un problema al crear el usuario';
+    $sql = "INSERT INTO usuarios (nombre,email,password) 
+    VALUES (:nombre,:email,:password)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':nombre', $_POST['nombre']);
+    $stmt->bindParam(':email', $_POST['email']);
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $stmt->bindParam(':password', $password);
+    if ($stmt->execute()) {
+      $message = 'Usuario creado exitosamente';
+    } else {
+      $message = 'Ocurrió un problema al crear el usuario';
+    }
   }
 }
 ?>
@@ -42,20 +47,24 @@ if (!empty($_POST['nombre']) && !empty($_POST['email']) && !empty($_POST['passwo
 
 
 
-  <?php if (!empty($message)) : ?>
-    <p> <?= $message ?></p>
-  <?php endif; ?>
+
   <img src="img/logo1.jpg">
   <h1>Registrar usuario</h1>
   <span>
     <div style="margin-bottom: 4px;">o</div> <a href="login.php"> <input type="submit" value="Iniciar Sesión"></a>
   </span>
 
+  <div>
+    <?php if (!empty($message)) : ?>
+      <p> <?= $message ?></p>
+    <?php endif; ?>
+  </div>
+
   <form action="signup.php" method="POST" autocomplete="off">
-    <input name="email" type="text" placeholder="E-mail">
-    <input name="nombre" type="text" placeholder="Nombre">
+    <input required name="email" type="text" placeholder="E-mail">
+    <input required name="nombre" type="text" placeholder="Nombre">
     <input name="password" type="password" placeholder="Contraseña"> <!-- PENDIENTE -->
-    <input type="submit" value="Aceptar">
+    <input required type="submit" value="Aceptar">
   </form>
 
 </body>

@@ -31,14 +31,12 @@
             <div class="col-sm-6" style="align-content: flex-end;">
               <br><br>
               <!-- Button trigger modal -->
-              <button @click="isEditar = false" type="button" class="btn btn-success " data-toggle="modal"
-                data-target="#nuevoProducto">
+              <button @click="isEditar = false" type="button" class="btn btn-success " data-toggle="modal" data-target="#nuevoProducto">
                 <i class="material-icons">&#xE147;</i> <span>Agregar nuevo producto</span>
               </button>
 
               <!-- Modal Crear producto-->
-              <div class="modal fade" id="nuevoProducto" tabindex="-1" role="dialog" aria-labelledby="khkj"
-                aria-hidden="true">
+              <div class="modal fade" id="nuevoProducto" tabindex="-1" role="dialog" aria-labelledby="khkj" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -52,26 +50,22 @@
                     <div class="modal-body">
                       <div class="form-group">
                         <label for="nombreP">Nombre producto</label>
-                        <input v-model="producto.nombre" type="text" name="nombreP" id="nombreP" class="form-control"
-                          placeholder="Nombre del producto" aria-describedby="">
+                        <input v-model="producto.nombre" type="text" name="nombreP" id="nombreP" class="form-control" placeholder="Nombre del producto" aria-describedby="">
                       </div>
 
                       <div class="form-group">
                         <label for="precioP">Precio</label>
-                        <input type="number" name="precioP" id="precioP" v-model="producto.precio" class="form-control"
-                          placeholder="Precio del producto" aria-describedby="">
+                        <input type="number" name="precioP" id="precioP" v-model="producto.precio" class="form-control" placeholder="Precio del producto" aria-describedby="">
                       </div>
 
                       <div class="form-group">
                         <label for="existenciasP">Existencias</label>
-                        <input v-model="producto.existencias" type="number" name="existenciasP" id="existenciasP"
-                          class="form-control" placeholder="Existencias del producto" aria-describedby="">
+                        <input v-model="producto.existencias" type="number" name="existenciasP" id="existenciasP" class="form-control" placeholder="Existencias del producto" aria-describedby="">
                       </div>
 
                       <div class="form-group">
                         <label for="rutaP">Ruta Imagen</label>
-                        <input v-model="producto.ruta_imagen" type="text" name="rutaP" id="rutaP" class="form-control"
-                          placeholder="Ingrese ruta de la imagen" aria-describedby="">
+                        <input v-model="producto.ruta_imagen" type="text" name="rutaP" id="rutaP" class="form-control" placeholder="Ingrese ruta de la imagen" aria-describedby="">
                       </div>
 
 
@@ -86,8 +80,7 @@
 
                       <div class="form-group">
                         <label for="espec">Especificaciones</label>
-                        <textarea v-model="producto.especificaciones" class="form-control" name="espec" id="espec"
-                          rows="3"></textarea>
+                        <textarea v-model="producto.especificaciones" class="form-control" name="espec" id="espec" rows="3"></textarea>
                       </div>
 
 
@@ -95,8 +88,7 @@
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                      <button type="button" class="btn btn-primary" v-if="!isEditar"
-                        @click="crearProducto()">Crear</button>
+                      <button type="button" class="btn btn-primary" v-if="!isEditar" @click="crearProducto()">Crear</button>
                       <button type="button" class="btn btn-primary" v-if="isEditar" @click="guardarProducto()">Guardar
                         cambios</button>
                     </div>
@@ -121,14 +113,14 @@
           </div>
         </div>
         <div class='col-sm-4 pull-right'>
-                    <div class="form-group">
-                        <select v-model="campo" class="form-control" name="campo" id="campo">
-                            <option v-for="c in campos" :value="c">
-                                {{c}}
-                            </option>
-                        </select>
-                    </div>
-                </div>
+          <div class="form-group">
+            <select v-model="campo" class="form-control" name="campo" id="campo">
+              <option v-for="c in campos" :value="c">
+                {{c}}
+              </option>
+            </select>
+          </div>
+        </div>
         <br><br>
         <table class="table">
           <thead>
@@ -165,8 +157,7 @@
                 <button class="btn btn-danger" @click="eliminarProducto(p)">
                   <span class="glyphicon glyphicon-remove-sign"></span>
                 </button>
-                <button @click="editarProducto(p)" class="btn btn-warning" data-toggle="modal"
-                  data-target="#nuevoProducto">
+                <button @click="editarProducto(p)" class="btn btn-warning" data-toggle="modal" data-target="#nuevoProducto">
                   <span class="glyphicon glyphicon-pencil"></span>
                 </button>
               </td>
@@ -177,14 +168,101 @@
       </div>
     </div>
     <script>
+      var app = new Vue({
+        el: '#app',
+        data: {
+          productos: [],
+          categorias: [],
+          producto: {
+            nombre: '',
+            ruta_imagen: '',
+            especificaciones: '',
+            precio: 0,
+            existencias: 0,
+            ruta_imagen: '',
+            id_categoria: ''
+          },
+          isEditar: false,
+          campo: 'nombre',
+          valor: '',
+          campos: [
+            'nombre',
+            'especificaciones',
+            'precio',
+            'id_categoria',
+            'existencias',
+            'ruta_imagen'
+          ]
+        },
+        created: function() {
+          this.getProductos();
+          this.getCategorias();
+        },
+        methods: {
+          getProductos() {
+            console.log("campo:", this.campo, " => valor", this.valor);
+            $.ajax({
+              type: "POST",
+              url: 'controladores/api.php',
+              data: {
+                servicio: "getProductos",
+                campo: this.campo,
+                valor: this.valor
+              },
+              success: function(respuesta) {
+                respuesta = JSON.parse(respuesta);
+                app.productos = respuesta;
+              }
+            });
+          },
+          eliminarProducto(producto) {
+            var respuesta = confirm("¿Estas seguro de eliminar el producto: '" + producto.nombre + "' ?");
+            if (respuesta) {
+              $.ajax({
+                type: "POST",
+                url: 'controladores/api.php',
+                data: {
+                  servicio: "borrarProducto",
+                  id: producto.id
+                },
+                success: function(respuesta) {
 
-      var app = new Vue(
-        {
-          el: '#app',
-          data: {
-            productos: [],
-            categorias: [],
-            producto: {
+                  respuesta = JSON.parse(respuesta);
+                  app.getProductos = respuesta;
+                }
+              });
+            }
+          },
+          getCategorias() {
+            $.ajax({
+              type: "POST",
+              url: 'controladores/api.php',
+              data: {
+                servicio: "getCategorias",
+              },
+              success: function(respuesta) {
+                respuesta = JSON.parse(respuesta);
+                app.categorias = respuesta;
+              }
+            });
+          },
+          crearProducto() {
+            $.ajax({
+              type: "POST",
+              url: 'controladores/api.php',
+              data: {
+                servicio: "saveProducto",
+                producto: this.producto
+              },
+              success: function(respuesta) {
+                $('#nuevoProducto').modal('toggle');
+                window.location.reload();
+
+              }
+            });
+          },
+          resetProducto() {
+            this.producto = {
               nombre: '',
               ruta_imagen: '',
               especificaciones: '',
@@ -192,123 +270,30 @@
               existencias: 0,
               ruta_imagen: '',
               id_categoria: ''
-            },
-            isEditar: false,
-            campo: 'nombre',
-                        valor: '',
-                        campos: [
-                            'nombre',
-                            'especificaciones',
-                            'precio',
-                            'id_categoria',
-                            'existencias',
-                            'ruta_imagen'
-                        ]
+            };
           },
-          created: function () {
-            this.getProductos();
-            this.getCategorias();
+          editarProducto(producto) {
+            this.isEditar = true;
+            this.producto = Object.assign({}, producto);
           },
-          methods: {
-            getProductos() {
-              console.log("campo:", this.campo, " => valor", this.valor);
-              $.ajax({
-                type: "POST",
-                url: 'controladores/api.php',
-                data: {
-                  servicio: "getProductos",
-                  campo: this.campo,
-                  valor: this.valor
-                },
-                success: function (respuesta) {
-                  respuesta = JSON.parse(respuesta);
-                  app.productos = respuesta;
-                }
-              });
-            },
-            eliminarProducto(producto) {
-              var respuesta = confirm("¿Estas seguro de eliminar el producto: '" + producto.nombre + "' ?");
-              if (respuesta) {
-                $.ajax({
-                  type: "POST",
-                  url: 'controladores/api.php',
-                  data: {
-                    servicio: "borrarProducto",
-                    id: producto.id
-                  },
-                  success: function (respuesta) {
-
-                    respuesta = JSON.parse(respuesta);
-                    app.getProductos = respuesta;
-                  }
-                });
+          guardarProducto() {
+            $.ajax({
+              type: "POST",
+              url: 'controladores/api.php',
+              data: {
+                servicio: "actualizarProducto",
+                producto: this.producto,
+                id: this.producto.id,
+              },
+              success: function(respuesta) {
+                app.getProductos();
+                $('#nuevoProducto').modal('toggle');
+                window.location.reload();
               }
-            },
-            getCategorias() {
-              $.ajax({
-                type: "POST",
-                url: 'controladores/api.php',
-                data: {
-                  servicio: "getCategorias",
-                },
-                success: function (respuesta) {
-                  respuesta = JSON.parse(respuesta);
-                  app.categorias = respuesta;
-                }
-              });
-            },
-            crearProducto() {
-              $.ajax({
-                type: "POST",
-                url: 'controladores/api.php',
-                data: {
-                  servicio: "saveProducto",
-                  producto: this.producto
-                },
-                success: function (respuesta) {
-                  $('#nuevoProducto').modal('toggle');
-                  this.resetProducto();
-                  app.getProductos();
-
-                }
-              });
-            },
-            resetProducto() {
-              this.producto = {
-                nombre: '',
-                ruta_imagen: '',
-                especificaciones: '',
-                precio: 0,
-                existencias: 0,
-                ruta_imagen: '',
-                id_categoria: ''
-              };
-            },
-            editarProducto(producto) {
-              this.isEditar = true;
-              this.producto = Object.assign({}, producto);
-            },
-            guardarProducto() {
-              $.ajax({
-                type: "POST",
-                url: 'controladores/api.php',
-                data: {
-                  servicio: "actualizarProducto",
-                  producto: this.producto,
-                  id: this.producto.id,
-                },
-                success: function (respuesta) {
-                  app.getProductos();
-                  $('#nuevoProducto').modal('toggle');
-                  this.resetProducto();
-                }
-              });
-            }
+            });
           }
         }
-      );
-
-
+      });
     </script>
 </body>
 

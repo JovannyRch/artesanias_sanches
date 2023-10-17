@@ -1,12 +1,11 @@
 <?php
 
-  session_start();
+session_start();
 
-  if (isset($_SESSION['user_id'])) {
-   
-  }else{
-    header("Location: login.php");
-  }
+if (isset($_SESSION['user_id'])) {
+} else {
+  header("Location: login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,8 +29,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
         <a class="navbar-brand" href="index.php">PEÑALOZA</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -52,8 +50,7 @@
 
           </ul>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" value="<?=$_SESSION['email'];?>" type="text" readonly
-              aria-label="Search">
+            <input class="form-control mr-sm-2" value="<?= $_SESSION['email']; ?>" type="text" readonly aria-label="Search">
             <a href="logout.php" class="btn btn-outline-success my-2 my-sm-0" type="button">Cerrar Sesión</a>
           </form>
         </div>
@@ -68,7 +65,7 @@
         <div class="carousel-item">
           <img class="d-block w-100" height="300px" src="img/banner2.png" alt="Second slide">
         </div>
-       
+
       </div>
       <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -130,18 +127,17 @@
 
 
   <script>
-
     let app = new Vue({
       el: '#app',
       data: {
         productos: [],
         categorias: [],
         cantidadCarrito: 0,
-        id_categoria: "<?=$_GET['id']?>",
-        id_usuario: "<?=$_SESSION['user_id']?>",
+        id_categoria: "<?= $_GET['id'] ?>",
+        id_usuario: "<?= $_SESSION['user_id'] ?>",
         nombreCategoria: ""
       },
-      created: function () {
+      created: function() {
         this.getCategorias();
         this.getProductos();
         this.fcantidadCarrito();
@@ -156,15 +152,15 @@
               servicio: "agregarCarrito",
               id_usuario: this.id_usuario,
               id_producto: id_producto,
-              id_categoria: '<?=$_GET["id"];?>',
+              id_categoria: '<?= $_GET["id"]; ?>',
             },
             success: (respuesta) => {
               this.cantidadCarrito = parseInt(respuesta);
               $.notify(
                 "Se ha agregado el producto a tu carrito", {
-                position: "right top",
-                className: "success"
-              });
+                  position: "right top",
+                  className: "success"
+                });
             }
           });
         },
@@ -178,6 +174,7 @@
               id_usuario: this.id_usuario
             },
             success: (respuesta) => {
+              console.log("respuesta", respuesta);
               this.cantidadCarrito = parseInt(respuesta);
             }
           });
@@ -225,8 +222,6 @@
         }
       }
     });
-
-
   </script>
 
 </body>

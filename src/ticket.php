@@ -1,7 +1,7 @@
 <?php
 
-require 'config/database.php';
 require 'Model.php';
+session_start();
 
 $modelo = new Model();
 
@@ -16,65 +16,14 @@ $nombreUsuario = $modelo->registro("SELECT nombre from usuarios where id = $id_u
 $productos = $modelo->arreglo("SELECT productos.nombre,pt.precio precioR,pt.cantidad from productos inner join productos_ticket pt on pt.id_producto = productos.id where pt.id_ticket = $id");
 
 // Require composer autoload
-require_once __DIR__ . '/vendor/autoload.php';
+
 // Create an instance of the class:
-$mpdf = new \Mpdf\Mpdf();
+
 $html = "
-<!DOCTYPE html>
-<html lang='es'>
-<head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-    <title>Ticket de compra </title>
-    <style>
-    table, th, td {
-  border: 1px solid black;
-}
-
-th, td {
-    padding: 10px;
-  }
-  td{
-      width: 10%
-  }
-  .titulo-azul{
-    background-color:rgb(39,85,119);
-    color: white;
-  }
-  .titulo-oro{
-    background-color:#9C8412;
-    color: white;
-    }
-
-    </style>
-    
-</head>
-
-<body>
-
-
-<img src='img/logo.jpg' width='15px;' /></div>
-<p style='text-align: right'>
-    San Francisco Tepeoluco, Temascalcingo, México <br>
-    Primer Barrio Centro <br>
-    Calle Luis Donaldo Colosio<br>
-    Teléfono: 7121735257<br>
-    Correo: axanafer@gmail.com
-</p>
-<hr>
-<div>
-    <span style='text-align: left'> N.Ticket: $id</span> <br>
-    <span style='text-align: right'> Fecha: $fecha</span> <br>
-    <span style='text-align: right'> Nombre del cliente: $nombreUsuario</span>
-
-</div>
-
-<br>
 ";
 
 $html .= "
-    <table style='width:100%; text-align:center'>
+    <table class='table' style='width:100%; text-align:center'>
     <tr  >
         <td class='titulo-azul'><b>N</b></td>
         <td class='titulo-azul'><b>Producto</b></td>
@@ -86,27 +35,27 @@ $html .= "
 
 foreach ($productos as $registro) {
     $subtotal = intval($registro['precioR']) / intval($registro['cantidad']);
-    $html.= "<tr>";
-            $html.= "<td>";
-            $html.=  $registro['cantidad'];
-            $html.= "</td>";
-        
-            $html.= "<td>";
-                $html.=  $registro['nombre'];
-            $html.= "</td>"; 
+    $html .= "<tr>";
+    $html .= "<td>";
+    $html .=  $registro['cantidad'];
+    $html .= "</td>";
 
-            $html.= "<td>$";
-                $html.=  $subtotal;
-            $html.= "</td>";
+    $html .= "<td>";
+    $html .=  $registro['nombre'];
+    $html .= "</td>";
 
-            $html.= "<td>$";
-                $html.=  $registro['precioR'];
-            $html.= "</td>";
+    $html .= "<td>$";
+    $html .=  $subtotal;
+    $html .= "</td>";
 
-           
-       
-        $html.= "</tr>";
-    }
+    $html .= "<td>$";
+    $html .=  $registro['precioR'];
+    $html .= "</td>";
+
+
+
+    $html .= "</tr>";
+}
 
 
 $html .= "</table> <br>
@@ -127,14 +76,62 @@ $html .= "</table> <br>
 </body>
 </html>
 ";
-
-//echo $html;
-// Write some HTML code:
-$mpdf->WriteHTML($html);
-// echo $html;
-// Output a PDF file directly to the browser
-$mpdf->Output();
-//echo json_encode($reporte);
-
-
 ?>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket de compra</title>
+    <!-- Bootstrap -->
+    <link href="css/bootstrap-4.3.1.css" rel="stylesheet">
+    <script src="assets/js/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+</head>
+
+<body>
+
+    <body style="background-color:#f9f2e7;">
+        <div id="app" class="container" style="padding: 10% 5%;">
+
+
+            <div class="container">
+                <div class="alert alert-success text-center" role="alert">
+                    ¡Gracias por su compra!
+                    <div>
+                        <b>Ticket #<?= $id ?></b>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <a href="index.php" type="button" class="btn btn-link">
+                        Regresar al inicio
+                    </a>
+                </div>
+                <div style="height: 100px"></div>
+                <h4>Productos</h4>
+                <?= $html ?>
+            </div>
+
+
+
+        </div>
+
+
+        </footer>
+
+        </div>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap-4.3.1.js"></script>
+        <script src="assets/js/notify.js"></script>
+
+
+    </body>
+</body>
+
+</html>

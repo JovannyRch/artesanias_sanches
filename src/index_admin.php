@@ -1,11 +1,11 @@
 <?php
 session_start();
- 
-  if (isset($_SESSION['user_id'])) {
-   
-  }else{
-    header("Location: login.php");
-  }
+
+if (isset($_SESSION['user_id'])) {
+} else {
+    echo "No eres admin";
+    //header("Location: login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,9 +24,7 @@ session_start();
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="#">PEÑALOZA</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -37,8 +35,7 @@ session_start();
                     </ul>
 
                     <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" value="<?=$_SESSION['email'];?>" type="text" readonly
-                            aria-label="Search">
+                        <input class="form-control mr-sm-2" value="<?= $_SESSION['email']; ?>" type="text" readonly aria-label="Search">
                         <a href="logout.php" class="btn btn-outline-success my-2 my-sm-0" type="button">Cerrar
                             Sesión</a>
                     </form>
@@ -63,7 +60,7 @@ session_start();
                 </div>
                 <div class="col-md-4 pb-1 pb-md-0">
                     <div class="card">
-                        <img class="card-img-top" src="img/clientes.png " width="100px" alt="Imagen de productos">
+                        <img class="card-img-top" src="https://static.vecteezy.com/system/resources/previews/020/911/897/non_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png" width="100px" alt="Imagen de productos">
                         <div class="card-body">
                             <h5 class="card-title">Administrar usuarios</h5>
                             <p class="card-text">
@@ -75,7 +72,7 @@ session_start();
                 </div>
                 <div class="col-md-4 pb-1 pb-md-0">
                     <div class="card">
-                        <img class="card-img-top" src="img/category.png " width="100px" alt="Imagen de productos">
+                        <img class="card-img-top" src="https://static-00.iconduck.com/assets.00/folder-icon-2048x1638-vinzc398.png" width="100px" alt="Imagen de productos">
                         <div class="card-body">
                             <h5 class="card-title">Administrar categorias</h5>
                             <p class="card-text">

@@ -8,6 +8,8 @@ require('PHPMailer/src/Exception.php');
 class Model
 {
 
+    private $db;
+
     function __construct()
     {
         $server = 'db';
@@ -19,7 +21,7 @@ class Model
         try {
             $this->db = new PDO("mysql:host=$server;dbname=$database;charset=utf8;", $username, $password);
         } catch (PDOException $e) {
-            die('Connection Failed: ' . $e->getMessage());
+            die('Connection Failed : ' . $e->getMessage());
         }
     }
 
@@ -39,8 +41,9 @@ class Model
 
     function login($password, $email)
     {
-        $usuario = $this->registro("SELECT id,tipo_usuario from usuarios where email = '$email'");
-        if ($usuario['id']) {
+        $usuario = $this->registro("SELECT id,tipo_usuario, password from usuarios where email = '$email'");
+
+        if ($usuario) {
             return $usuario;
         } else {
             return null;
@@ -98,7 +101,6 @@ class Model
     {
         $cantidad =  $this->registro("SELECT sum(cantidad) total from carritos 
         where carritos.id_usuario = $id_usuario ")["total"];
-
         $cantidad = intval($cantidad);
         return $cantidad;
     }
@@ -123,7 +125,7 @@ class Model
 
     function getCarrito($id_usuario)
     {
-        return $this->arreglo("SELECT * from productos inner join carritos 
+        return $this->arreglo("SELECT productos.*, carritos.cantidad from productos inner join carritos 
         on productos.id =  carritos.id_producto where carritos.id_usuario = $id_usuario ");
     }
 
@@ -227,7 +229,7 @@ class Model
     // Esta funcion es la que genera el tickets en la tabla tickets
     public function comprar($id_usuario, $total, $productos)
     {
-        $id = $this->query("INSERT INTO tickets(id_usuario,total) values($id_usuario, $total)");
+        $this->query("INSERT INTO tickets(id_usuario,total) values($id_usuario, $total)");
         $id_ticket = $this->db->lastInsertId();
         foreach ($productos as $producto) {
             $id_producto = $producto['id'];
@@ -242,6 +244,18 @@ class Model
         //$this->enviarEmail($correo,"Compra en Axanafer","Su compra ha sido realizado exitosamente :D");
         return $id_ticket;
     }
+
+    public function existeUsuario($email)
+    {
+        $total = $this->registro("SELECT count(*) total from usuarios where email = '$email'")['total'];
+        $total = intval($total);
+        if ($total > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     function enviarEmail($email, $asunto, $mensaje)
     {
@@ -330,7 +344,7 @@ class Model
     function utf8_converter($array)
     {
         array_walk_recursive($array, function (&$item, $key) {
-            if (!mb_detect_encoding($item, 'utf-8', true)) {
+            if ($item !== null && !mb_detect_encoding($item, 'utf-8', true)) {
                 $item = utf8_encode($item);
             }
         });
