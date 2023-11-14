@@ -11,7 +11,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: ""
-      MYSQL_DATABASE: my_database
+      MYSQL_DATABASE: project_db
       MYSQL_USER: user
       MYSQL_PASSWORD: user_password
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"

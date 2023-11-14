@@ -1,0 +1,463 @@
+/* Estilos generales */
+body {
+  font-family: "Arial", sans-serif;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+a {
+  color: #ffd700;
+}
+
+/* Estilos del contenedor de login */
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Estilos del formulario */
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  margin-bottom: 5px;
+}
+
+.login-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 4px;
+}
+
+.login-form button {
+  padding: 10px;
+  background-color: #ffd700;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.login-form button:hover {
+  background-color: #e6c300;
+}
+
+/* Estilos responsivos (para dispositivos móviles) */
+@media (max-width: 600px) {
+  .login-container {
+    width: 90%;
+  }
+}
+
+/* Estilos del contenedor de registro */
+.register-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  margin: auto;
+  overflow: scroll;
+  text-align: center;
+  /* HIde scroll bar */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Estilos del formulario de registro (pueden ser similares al formulario de login) */
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-form label {
+  margin-bottom: 5px;
+}
+
+.register-form input {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 4px;
+}
+
+.register-form button {
+  padding: 10px;
+  background-color: #ffd700;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.register-form button:hover {
+  background-color: #e6c300;
+}
+
+/* Puedes añadir o modificar estilos según necesites */
+
+/* Estilos del contenedor de películas */
+.movies-container {
+  width: 90%;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Estilos de la tabla de películas */
+.movies-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.movies-table th,
+.movies-table td {
+  padding: 10px;
+  border: 1px solid #ffffff;
+}
+
+.movies-table thead {
+  background-color: #ffd700;
+  color: #1a1a1a;
+}
+
+.movies-table tbody tr:nth-child(odd) {
+  background-color: #2a2a2a; /* Para un efecto de cebra en las filas */
+}
+
+.movies-table tbody tr:hover {
+  background-color: #414141; /* Cambio de color al pasar el mouse */
+}
+
+/* Estilos para las imágenes de las películas */
+.movie-image {
+  width: 100px; /* O el tamaño que desees */
+  height: auto;
+  border-radius: 4px; /* Si deseas bordes redondeados */
+}
+
+/* Mejoras en la tabla para acomodar imágenes */
+.movies-table td {
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle; /* Alinea verticalmente el contenido de la celda */
+}
+
+/* Estilos generales del navbar */
+.navbar {
+  background-color: #1a1a1a; /* Color de fondo */
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  align-items: center;
+  width: 90vw;
+  margin-top: 10px;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar-nav {
+  display: flex;
+}
+
+.nav-item {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #ffd700; /* Color que coincide con la estética de la marca */
+  transition: color 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #e6c300; /* Color al pasar el mouse */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-play {
+  padding: 5px 10px;
+  background-color: #ffd700;
+  border: none;
+  border-radius: 5px;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-play:hover {
+  background-color: #e6c300;
+}
+
+.video-container {
+  width: 100%;
+  max-width: 800px; /* Puedes ajustar este valor según tus necesidades */
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden; /* Para que respete el borde redondeado en caso de necesitar barras de desplazamiento */
+}
+
+video {
+  display: block; /* Evita espacios adicionales abajo del video */
+  width: 100%; /* Asegura que el video se ajuste al ancho del contenedor */
+  border-radius: 4px; /* Opcional: si quieres que el video tenga bordes redondeados */
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+}
+
+.movies-table {
+  width: 100%;
+  margin: auto;
+  border-collapse: collapse;
+}
+
+.movies-table th,
+.movies-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.movie-image {
+  width: 50px; /* Ajusta según necesidades */
+  height: auto;
+  border-radius: 4px;
+}
+
+.btn-watch-again {
+  padding: 5px 10px;
+  background-color: #4caf50; /* Un color distinto para diferenciar la acción */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-watch-again:hover {
+  background-color: #45a049;
+}
+
+select {
+  display: block;
+  width: 100%; /* Ocupa el ancho completo del contenedor padre */
+  padding: 8px 10px;
+  margin-bottom: 15px; /* Espacio debajo del select para separarlo de otros elementos */
+  font-size: 16px; /* Tamaño de fuente para facilitar la lectura */
+  border: 1px solid #ddd; /* Borde sutil */
+  border-radius: 4px; /* Bordes redondeados */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra interna para dar profundidad */
+  background-color: white;
+  -webkit-appearance: none; /* Desactivar estilo predeterminado en Webkit/Blink */
+  -moz-appearance: none; /* Desactivar estilo predeterminado en Firefox */
+  appearance: none; /* Desactivar estilo predeterminado */
+}
+
+/* Estilo para el icono de desplegable del select */
+select {
+  background-image: url("path_to_dropdown_icon.png"); /* Añade tu propio ícono de flecha */
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Posición del ícono en el lado derecho */
+  background-size: 12px; /* Tamaño del ícono */
+}
+
+/* Estilo para cuando el select tiene el foco */
+select:focus {
+  border-color: #a4d3ee;
+  box-shadow: 0 0 5px rgba(30, 140, 190, 0.5);
+  outline: none; /* Remueve el contorno predeterminado en foco */
+}
+
+/* Estilos específicos para el cuerpo del login del administrador */
+.admin-login-body {
+  background-color: #333; /* Un color oscuro para el fondo */
+  color: #fff; /* Texto claro para contraste */
+  font-family: Arial, sans-serif;
+}
+
+/* Estilos para el contenedor de login */
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #444; /* Un tono ligeramente diferente al fondo para el contenedor */
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Ajustes visuales para los inputs y botones */
+.form-group {
+  margin-bottom: 15px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #555;
+  border-radius: 3px;
+  background-color: #fff;
+  color: #333;
+}
+
+.admin-login-btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #ffd700;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-login-btn:hover {
+  background-color: #e6c300;
+}
+
+.add-button-container {
+  text-align: right;
+  margin-bottom: 20px;
+}
+
+.add-movie-btn {
+  padding: 10px 20px;
+  background-color: #ffd700;
+  color: black;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.add-movie-btn:hover {
+  background-color: #e6c300;
+}
+
+.form-container {
+  width: 40%;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  overflow: scroll;
+  padding: 100px 100px;
+  flex: 1;
+}
+
+.form-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Estilos para el footer */
+.site-footer {
+  background-color: #222;
+  color: white;
+  padding: 20px 0;
+  font-size: 0.8em;
+  width: 100%;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.footer-about,
+.footer-links,
+.footer-contact {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.footer-about h3,
+.footer-links h4,
+.footer-contact h4 {
+  color: #fff;
+}
+
+.footer-about p,
+.footer-contact p {
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links ul li a {
+  color: #aaa;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links ul li a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.footer-bottom p {
+  color: #aaa;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-about,
+  .footer-links,
+  .footer-contact {
+    padding: 10px;
+    text-align: center;
+  }
+}
+
+.alert {
+  padding: 20px;
+  background-color: #f44336;
+  color: white;
+  margin-bottom: 15px;
+}
+
+.success {
+  padding: 20px;
+  background-color: #4caf50;
+  color: white;
+  margin-bottom: 15px;
+}
