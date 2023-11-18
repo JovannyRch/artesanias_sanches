@@ -1,29 +1,29 @@
 <?php
-require './database.php';
+// Iniciar la sesión
+session_start();
+
+// Variables para guardar errores y valores del formulario
+$errores = [];
+$usuario = '';
+$contrasena = '';
+
+// Verificar si el formulario ha sido enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $usuario = $_POST['usuario'] ?? '';
+    $contrasena = $_POST['contrasena'] ?? '';
 
-    if (isset($_POST['email'], $_POST['password'])) {
-
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-
-        $db = new Database();
-        $user = $db->login($password, $email);
-
-
-        if ($user) {
-            session_start();
-            $_SESSION['user_id'] = $user['id'];
-            if ($user['tipo_usuario'] == 1) {
-                header('Location: index.php');
-            } else {
-                header('Location: admin.php');
-            }
-        } else {
-            echo 'Usuario o contraseña incorrectos';
-        }
+    // Aquí deberías verificar el usuario y la contraseña con la base de datos
+    // Por ahora, solo simularemos una validación
+    if ($usuario === 'admin' && $contrasena === 'admin') {
+        // Usuario y contraseña correctos, redirigir al dashboard
+        $_SESSION['usuario'] = $usuario; // Guardar el nombre de usuario en la sesión
+        header("Location: dashboard.php");
+        exit;
+    } else {
+        $errores[] = 'El nombre de usuario o la contraseña son incorrectos.';
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -32,42 +32,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión</title>
+    <title>
+        Login
+    </title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="path_to_tailwind.css" rel="stylesheet">
 </head>
 
-<body class="dark:text-slate-400 bg-white dark:bg-slate-900 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100 flex flex-col min-h-screen">
 
 
-    <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form class="space-y-6" method="POST" action="./login.php">
 
-            <div class="flex justify-center flex-col items-center">
-                <h2 class="font-bold text-2xl text-center mb-2">
-                    Artesanías de barro Sánchez
-                </h2>
-                <img src="./assets/logo.jpeg" class="h-36" alt="Flowbite Logo" />
+    <main class="container mx-auto p-4 flex-1">
+        <?php
+
+        $content = '
+    <div class="w-full max-w-xl mx-auto flex h-screen items-center">
+
+       
+
+
+        <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex gap-6" action="login.php" method="POST">
+
+            <div class="w-1/3 flex flex-col justify-start items-center">
+                <h1 class="text-center text-3xl font-bold mb-4">Login</h1>
+                <img src="./assets/logo.png" alt="Imagen de ejemplo">
             </div>
-            <h5 class="text-xl font-medium text-gray-900 dark:text-white">Inicio de sesión</h5>
             <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="nombre@compania.com" required>
-            </div>
-            <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <input type="password" name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
-            </div>
-
-            <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Ingresar
-            </button>
-            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                ¿Aún no estás registrado? <a href="./signup.php" class="text-blue-700 hover:underline dark:text-blue-500">
-                    Crear cuenta
-                </a>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="usuario">
+                    Usuario
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="usuario" name="usuario" type="text" placeholder="Usuario" value="' . htmlspecialchars($usuario) . '">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="contrasena">
+                        Contraseña
+                    </label>
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="contrasena" name="contrasena" type="password" placeholder="******************">
+                    ' . (!empty($errores) ? '<p class="text-red-500 text-xs italic">' . htmlspecialchars($errores[0]) . '</p>' : '') . '
+                </div>
+                <div class="flex items-center justify-between">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+                        Iniciar sesión
+                    </button>
+                </div>
             </div>
         </form>
     </div>
+';
+
+        echo $content;
+        ?>
+    </main>
 
 
 </body>
