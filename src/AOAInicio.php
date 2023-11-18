@@ -25,6 +25,7 @@
         <tr>
           <th>Imagen</th>
           <th>Nombre</th>
+          <th>Actores</th>
           <th>Categoría</th>
           <th>Año</th>
           <th>Clasificación</th>
@@ -34,11 +35,12 @@
       <tbody>
         <tr>
           <td>
-            <img src="https://image.tmdb.org/t/p/w185/aZXHjmhSSGUshLEdgsNCTH9z7Ix.jpg" alt="El Viaje Fantástico" class="movie-image" />
+            <img src="https://es.web.img2.acsta.net/pictures/21/05/11/13/47/5979708.jpg" alt="El Viaje de Chihiro" class="movie-image" />
           </td>
-          <td>Los asesinos de la luna</td>
-          <td>Aventura</td>
-          <td>2021</td>
+          <td>El Viaje de Chihiro</td>
+          <td>Rumi Hiiragi, Jason Marsden</td>
+          <td>Animación</td>
+          <td>2001</td>
           <td>PG-13</td>
           <td>
             <button type="button" class="btn-play" onclick="reproducirPelicula('idPelicula1')">
@@ -48,12 +50,13 @@
         </tr>
         <tr>
           <td>
-            <img src="https://image.tmdb.org/t/p/w185/7cpAXiwsdFx6GGU0TBGRvDYJuRQ.jpg" alt="Las Sombras de Ayer" class="movie-image" />
+            <img src="https://dx35vtwkllhj9.cloudfront.net/paramountpictures/paw-patrol-the-mighty-movie/images/regions/ar/onesheet.jpg" alt="Paw Patrol" class="movie-image" />
           </td>
-          <td>Freelance</td>
-          <td>Drama</td>
-          <td>2020</td>
-          <td>R</td>
+          <td>Paw Patrol</td>
+          <td>Kim Kardashian, Ron Pardo</td>
+          <td>Animación</td>
+          <td>2023</td>
+          <td>PG</td>
           <td>
             <button type="button" class="btn-play" onclick="reproducirPelicula('idPelicula1')">
               Reproducir
@@ -62,12 +65,28 @@
         </tr>
         <tr>
           <td>
-            <img src="https://image.tmdb.org/t/p/w185/keTEWhBJ4V7hitpsSYC11u0wrIr.jpg" alt="Risas en el Espacio" class="movie-image" />
+            <img src="https://cdn.marvel.com/content/1x/marvels_imax_digital_supplemental_v3_lg.jpg" alt="The Marvels" class="movie-image" />
           </td>
-          <td>El año del tigre</td>
+          <td>The Marvels</td>
+          <td>Brie Larson, Isman Vellani</td>
+          <td>Acción</td>
+          <td>2023</td>
+          <td>PG-13</td>
+          <td>
+            <button type="button" class="btn-play" onclick="reproducirPelicula('idPelicula1')">
+              Reproducir
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img src="https://static.cinepolis.com/resources/mx/movies/posters/414x603/43329-183342-20230811032620.jpg" alt="Sobreviviendo a mis XV" class="movie-image" />
+          </td>
+          <td>Sobreviviendo a mis XV</td>
+          <td>Memo Villegas, Verónica Bravo</td>
           <td>Comedia</td>
-          <td>2022</td>
-          <td>PG</td>
+          <td>2023</td>
+          <td>PG-13</td>
           <td>
             <button type="button" class="btn-play" onclick="reproducirPelicula('idPelicula1')">
               Reproducir

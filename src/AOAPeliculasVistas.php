@@ -34,10 +34,10 @@
       <tbody>
         <tr>
           <td>
-            <img src="https://image.tmdb.org/t/p/w185/aZXHjmhSSGUshLEdgsNCTH9z7Ix.jpg" alt="El Viaje Fantástico" class="movie-image" />
+            <img src="https://cdn.marvel.com/content/1x/marvels_imax_digital_supplemental_v3_lg.jpg" alt="The Marvels" class="movie-image" />
           </td>
-          <td>El Viaje Fantástico</td>
-          <td>12/01/2023</td>
+          <td>The Marvels</td>
+          <td>12/10/2023</td>
           <td>
             <button type="button" onclick="reproducirPelicula('idPelicula1')" class="btn-watch-again">
               Ver de Nuevo

@@ -43,10 +43,10 @@
       <tbody>
         <tr>
           <td>1</td>
-          <td>Juan Pérez</td>
-          <td>juan.perez@example.com</td>
-          <td>Mexicana</td>
-          <td>2022-01-15</td>
+          <td>Rumi Hiiragi</td>
+          <td>rumi.hiiragi@example.com</td>
+          <td>Japonesa</td>
+          <td>1987-08-01</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>
@@ -54,10 +54,76 @@
         </tr>
         <tr>
           <td>2</td>
-          <td>Maria López</td>
-          <td>maria.lopez@example.com</td>
+          <td>Memo Villegas</td>
+          <td>memo.villegas@example.com</td>
+          <td>Mexicano</td>
+          <td>1987-05-26</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Brie Larson</td>
+          <td>brie.larson@example.com</td>
+          <td>Estado Unidense</td>
+          <td>1989-10-01</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Kim Kardashian</td>
+          <td>kim.kardashian@example.com</td>
+          <td>Estado Unidense</td>
+          <td>1980-10-21</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Jason Marsden</td>
+          <td>jason.marsden@example.com</td>
+          <td>Japonesa</td>
+          <td>1988-03-23</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Verónica Bravo</td>
+          <td>vero.bravo@example.com</td>
           <td>Mexicana</td>
-          <td>2022-02-20</td>
+          <td>1980-10-21</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Isman Vellani</td>
+          <td>isman.vellani@example.com</td>
+          <td>Estado Unidense</td>
+          <td>2002-09-03</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Ron Pardo</td>
+          <td>ron.pardo@example.com</td>
+          <td>Canadiense</td>
+          <td>1967-05-15</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>

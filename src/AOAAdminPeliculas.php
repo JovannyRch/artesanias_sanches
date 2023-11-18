@@ -36,6 +36,7 @@
           <th>Nombre</th>
           <th>Categoría</th>
           <th>Director</th>
+          <th>Actor</th>
           <th>País</th>
           <th>Año</th>
           <th>Acciones</th>
@@ -47,6 +48,7 @@
           <td>El Viaje de Chihiro</td>
           <td>Animación</td>
           <td>Hayao Miyazaki</td>
+          <td>Rumi Hiiragi</td>
           <td>Japón</td>
           <td>2001</td>
           <td>
@@ -56,35 +58,38 @@
         </tr>
         <tr>
           <td>2</td>
-          <td>El Viaje de Chihiro</td>
+          <td>Paw Patrol</td>
           <td>Animación</td>
-          <td>Hayao Miyazaki</td>
-          <td>Japón</td>
-          <td>2001</td>
+          <td>Cal Brunker</td>
+          <td>Kim Kardashian</td>
+          <td>Estados Unidos</td>
+          <td>2023</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>
           </td>
         </tr>
         <tr>
-          <td>2</td>
-          <td>El Viaje de Chihiro</td>
-          <td>Animación</td>
-          <td>Hayao Miyazaki</td>
-          <td>Japón</td>
-          <td>2001</td>
+          <td>3</td>
+          <td>The Marvels</td>
+          <td>Acción</td>
+          <td>Nia DaCosta</td>
+          <td>Brie Larson</td>
+          <td>Estados Unidos</td>
+          <td>2023</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>
           </td>
         </tr>
         <tr>
-          <td>2</td>
-          <td>El Viaje de Chihiro</td>
-          <td>Animación</td>
-          <td>Hayao Miyazaki</td>
-          <td>Japón</td>
-          <td>2001</td>
+          <td>4</td>
+          <td>Sobreviviendo a mix XV</td>
+          <td>Comedia</td>
+          <td>Chava Cartas</td>
+          <td>Memo Villegas</td>
+          <td>México</td>
+          <td>2023</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>

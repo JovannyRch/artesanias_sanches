@@ -43,10 +43,10 @@
       <tbody>
         <tr>
           <td>1</td>
-          <td>Juan Pérez</td>
-          <td>juan.perez@example.com</td>
-          <td>Mexicana</td>
-          <td>2022-01-15</td>
+          <td>Hayao Miyazaki</td>
+          <td>hayao.miyazaki@example.com</td>
+          <td>Japonesa</td>
+          <td>1941-01-05</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>
@@ -54,10 +54,32 @@
         </tr>
         <tr>
           <td>2</td>
-          <td>Maria López</td>
-          <td>maria.lopez@example.com</td>
+          <td>Chava Cartas</td>
+          <td>chava.cartas@example.com</td>
+          <td>Mexicano</td>
+          <td>1971-09-15</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Nia DaCosta</td>
+          <td>nia.dacosta@example.com</td>
+          <td>Estado Unidense</td>
+          <td>1989-11-08</td>
+          <td>
+            <button class="btn-play">Editar</button>
+            <button class="btn-play">Eliminar</button>
+          </td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Cal Brunker</td>
+          <td>cal.brunker@example.com</td>
           <td>Mexicana</td>
-          <td>2022-02-20</td>
+          <td>1978-11-16</td>
           <td>
             <button class="btn-play">Editar</button>
             <button class="btn-play">Eliminar</button>

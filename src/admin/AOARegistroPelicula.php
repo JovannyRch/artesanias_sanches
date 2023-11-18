@@ -116,24 +116,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="director">Director:</label>
       <select id="director" name="director">
         <option value="1">Hayao Miyazaki</option>
-        <option value="2">Mamoru Hosoda</option>
-        <option value="3">Makoto Shinkai</option>
+        <option value="2">Chava Cartas</option>
+        <option value="3">Nia DaCosta</option>
+        <option value="3">Cal Brunker</option>
       </select>
       <br />
 
       <label for="actor1">Actor 1:</label>
       <select id="actor1" name="actor1">
-        <option value="1">Hayao Miyazaki</option>
-        <option value="2">Mamoru Hosoda</option>
-        <option value="3">Makoto Shinkai</option>
+        <option value="1">Rumi Hiiragi</option>
+        <option value="2">Memo Villegas</option>
+        <option value="3">Brie Larson</option>
+        <option value="4">Kim Kardashian</option>
       </select>
       <br />
 
       <label for="actor2">Actor 2:</label>
       <select id="actor2" name="actor2">
-        <option value="1">Hayao Miyazaki</option>
-        <option value="2">Mamoru Hosoda</option>
-        <option value="3">Makoto Shinkai</option>
+        <option value="1">Jason Marsden</option>
+        <option value="2">Verónica Bravo</option>
+        <option value="3">Isman Vellani</option>
+        <option value="4">Ron Pardo</option>
       </select>
       <br />
 
