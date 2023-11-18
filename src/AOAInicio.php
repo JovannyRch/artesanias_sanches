@@ -13,6 +13,7 @@
       <div class="navbar-brand">PelisNow</div>
       <div class="navbar-nav">
         <a href="AOAInicio.php" class="nav-item">Películas Disponibles</a>
+        <a href="AOAEstrenos.php" class="nav-item">Estrenos</a>
         <a href="AOAPeliculasVistas.php" class="nav-item">Películas Vistas</a>
         <a href="AOALogin.php" class="nav-item">Logout</a>
       </div>
