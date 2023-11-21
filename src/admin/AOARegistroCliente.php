@@ -1,6 +1,9 @@
 <?php
 include_once('./validators.php');
+include_once('./../db.php');
 session_start();
+
+$db = new Database();
 
 $tipos_membresias = [
     [
@@ -81,6 +84,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("El CURP es requerido");
         }
 
+        $fecha_termino = $membresia == "mensual" ? "DATE_ADD(NOW(), INTERVAL 1 MONTH)" : "DATE_ADD(NOW(), INTERVAL 1 YEAR)";
+
+        $db->query("INSERT INTO tblcliente
+            (nombre, ap_paterno, ap_materno, rfc, curp, tipo_membresia, fecha_inicio_membresia, fecha_termino_membresia)
+            values (
+                '$nombre',
+                '$paterno',
+                '$materno',
+                '$rfc',
+                '$curp',
+                '$membresia',
+                NOW(),
+                $fecha_termino
+            )
+         ");
 
 
         $_SESSION['success_message'] = "Registro exitoso";
@@ -99,6 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8" />
     <title>Registro cliente - PelisNow</title>
     <link rel="stylesheet" href="./../styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -129,18 +149,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="materno">Apellido materno:</label>
             <input type="text" id="materno" name="materno" value="<?= $materno ?>" required />
 
+            <!-- Fecha de nacimiento -->
+            <label for="fecha">Fecha de nacimiento:</label>
+            <input class="text-black" type="date" id="fecha" name="fecha" required />
+
+            <!-- Genero -->
+            <label for="genero">Genero:</label>
+            <select id="genero" name="genero" class="text-black" required>
+                <option value="H">Hombre</option>
+                <option value="M">Mujer</option>
+            </select>
+
+            <br />
+            <!-- Estado -->
+            <label for="estado">Estado:</label>
+            <select id="estado" class="text-black" name="estado" required>
+            </select>
+
 
             <!-- RFC -->
+            <br />
             <label for="rfc">RFC:</label>
             <input type="text" id="rfc" name="rfc" value="<?= $rfc ?>" required />
 
-            <!-- Curp -->
-            <label for="curp">CURP:</label>
-            <input type="text" id="curp" name="curp" value="<?= $curp ?>" required />
+            <div class="flex gap-4">
+                <div>
+                    <label for="curp">CURP:</label>
+                    <input type="text" id="curp" name="curp" value="<?= $curp ?>" required />
+                </div>
 
+                <div>
+                    <button type="button" id="generar">Generar CURP</button>
+                </div>
+            </div>
             <!-- Membresia -->
             <label for="membresia">Membresia:</label>
-            <select id="membresia" name="membresia" required>
+            <select id="membresia" name="membresia" class="text-black" required>
                 <?php foreach ($tipos_membresias as $membresia) { ?>
                     <option value="<?= $membresia['id'] ?>"><?= $membresia['nombre'] ?></option>
                 <?php } ?>
@@ -156,6 +200,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <?php if (isset($_SESSION['success_message'])) { ?>
                 <div class="success">
+                    <br>
+                    <br>
                     <p> <?php echo $_SESSION['success_message']; ?></p>
                 </div>
             <?php
@@ -164,7 +210,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <br />
             <br />
+
+            <!-- Separator -->
+            <div class="separator bg-white h-[1px] mb-4 ">
+
+            </div>
+
+            <div class="mb-4">
+                <span>Información de la tarjeta</span>
+            </div>
+
+            <!-- Numero de tarjeta -->
+            <label for="numero_tarjeta">Número de tarjeta:</label>
+            <input type="text" id="numero_tarjeta" name="numero_tarjeta" required />
+
+            <!-- Precio a pagar -->
+            <label for="precio">Precio a pagar:</label>
+            <input type="number" id="precio" class="text-black" name="precio" required />
+
+
+            <!-- Banco -->
+            <label for="banco">Banco:</label>
+            <input type="text" id="banco" name="banco" required />
+
+
+            <!-- Fecha de expiracion -->
+            <label for="fecha_expiracion">Fecha de expiración:</label>
+            <input class="text-black" id="fecha_expiracion" name="fecha_expiracion" required placeholder="MM/AA" />
+
+
+            <!-- Codigo de seguridad -->
+            <label for="codigo_seguridad">Código de seguridad:</label>
+            <input class="text-black" id="codigo_seguridad" name="codigo_seguridad" required placeholder="CVV" />
+
+            <br />
+            <br />
             <button type="submit">Guardar</button>
+            <br />
+            <br />
         </form>
         <footer class="site-footer">
             <div class="footer-bottom">
@@ -176,9 +259,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 
 <script>
-    function onSubmit(token) {
-        window.location.href = "AOAInicio.php";
+    function generarCURP() {
+        abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        random09a = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
+        random09b = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
+        randomAZ = Math.floor(Math.random() * (26 - 0 + 1)) + 0;
+        ano = Number($("#fecha").val().slice(0, 4));
+        mes = Number($("#fecha").val().slice(5, 7));
+        dia = Number($("#fecha").val().slice(8, 10));
+
+        var CURP = [];
+        CURP[0] = $("#paterno").val().charAt(0).toUpperCase();
+        CURP[1] = $("#paterno").val().slice(1).replace(/\a\e\i\o\u/gi, "").charAt(0).toUpperCase();
+        CURP[2] = $("#materno").val().charAt(0).toUpperCase();
+        CURP[3] = $("#nombre").val().charAt(0).toUpperCase();
+        CURP[4] = ano.toString().slice(2);
+        CURP[5] = mes < 10 ? "0" + mes : mes;
+        CURP[6] = dia < 10 ? "0" + dia : dia;
+        CURP[7] = $("#genero").val().toUpperCase();
+        CURP[8] = abreviacion[estados.indexOf($("#estado").val().toLowerCase())];
+        CURP[9] = $("#paterno").val().slice(1).replace(/[aeiou]/gi, "").charAt(0).toUpperCase();
+        CURP[10] = $("#materno").val().slice(1).replace(/[aeiou]/gi, "").charAt(0).toUpperCase();
+        CURP[11] = $("#nombre").val().slice(1).replace(/[aeiou]/gi, "").charAt(0).toUpperCase();;
+        CURP[12] = ano < 2000 ? random09a : abc[randomAZ];
+        CURP[13] = random09b;
+        return CURP.join("");
     }
+    var estados = ["aguascalientes", "baja california", "baja california sur", "campeche", "chiapas", "chihuahua", "coahuila", "colima", "ciudad de mexico", "distrito federal", "durango", "guanajuato", "guerrero", "hidalgo", "jalisco", "estado de mexico", "michoacan", "morelos", "nayarit", "nuevo leon", "oaxaca", "puebla", "queretaro", "quintana roo", "san luis potosi", "sinaloa", "sonora", "tabasco", "tamaulipas", "tlaxcala", "veracruz", "yucatan", "zacatecas"];
+    var abreviacion = ["AS", "BC", "BS", "CC", "CS", "CH", "CL", "CM", "CX", "DF", "DG", "GT", "GR", "HG", "JC", "MC", "MN", "MS", "NT", "NL", "OC", "PL", "QT", "QR", "SP", "SL", "SR", "TC", "TS", "TL", "VZ", "YN", "ZS"];
+
+    $("#generar").click(function() {
+        $("#curp").val(generarCURP());
+    });
+
+    // render estados
+    // on load
+    window.onload = function() {
+        var select = document.getElementById("estado");
+        for (var i = 0; i < estados.length; i++) {
+            var opt = estados[i];
+            var el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            select.appendChild(el);
+        }
+    };
 </script>
 
 </html>

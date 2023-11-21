@@ -1,3 +1,11 @@
+<?
+include_once('./db.php');
+session_start();
+$db = new Database();
+
+$clientes = $db->array("SELECT * FROM tblcliente");
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -34,26 +42,22 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Email</th>
+          <th>Curp</th>
           <th>Membresía</th>
           <th>Fecha de registro</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Juan Pérez</td>
-          <td>juan.perez@example.com</td>
-          <td>Anual</td>
-          <td>2022-01-15</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Maria López</td>
-          <td>maria.lopez@example.com</td>
-          <td>Mensual</td>
-          <td>2022-02-20</td>
-        </tr>
+
+        <?php foreach ($clientes as $cliente) { ?>
+          <tr>
+            <td><?php echo $cliente['id_cliente'] ?></td>
+            <td><?php echo $cliente['nombre'] . " " . $cliente['ap_paterno'] . " " . $cliente['ap_materno'] ?></td>
+            <td><?php echo $cliente['curp'] ?></td>
+            <td><?php echo $cliente['tipo_membresia'] ?></td>
+            <td><?php echo $cliente['fecha_inicio_membresia'] ?></td>
+          </tr>
+        <?php } ?>
       </tbody>
     </table>
   </div>
