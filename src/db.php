@@ -1,23 +1,13 @@
 <?php
-
-class Database
+include_once 'aoa_conexion.php';
+class Database extends Conexion
 {
-
-    private $db;
 
     function __construct()
     {
-        $server = 'localhost';
-        $username = 'eeiwgnuv_pelisnow';
-        $password = '123qwe';
-        $database = 'eeiwgnuv_pelisnow';
-
-        try {
-            $this->db = new PDO("mysql:host=$server;dbname=$database;charset=utf8;", $username, $password);
-        } catch (PDOException $e) {
-            die('Connection Failed: ' . $e->getMessage());
-        }
+        parent::__construct();
     }
+
 
     function checkConnection()
     {
@@ -32,7 +22,7 @@ class Database
 
     function lastId()
     {
-        return $this->registro("SELECT LAST_INSERT_ID() id");
+        return $this->row("SELECT LAST_INSERT_ID() id");
     }
 
 

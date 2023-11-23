@@ -84,5 +84,6 @@ function isValidYear($year)
 
 function isOnlyCharacters($string)
 {
-    return preg_match('/^[a-zA-Z ]+$/', $string);
+    $string = str_replace(' ', '', $string);
+    return preg_match('/^[a-zA-ZÀ-ÖØ-öø-ÿ]+$/', $string);
 }

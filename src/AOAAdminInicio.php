@@ -1,9 +1,11 @@
 <?
 include_once('./db.php');
+include_once('./aoa_leer_clientes.php');
+
 session_start();
 $db = new Database();
 
-$clientes = $db->array("SELECT * FROM tblcliente");
+$clientes = leerClientes($db);
 
 ?>
 <!DOCTYPE html>
@@ -33,10 +35,18 @@ $clientes = $db->array("SELECT * FROM tblcliente");
   <div class="movies-container">
     <h1>Listado de usuarios</h1>
     <div class="add-button-container">
-      <a href="/admin/AOARegistroCliente.php" class="add-movie-btn">
+      <a href="/AOARegistroCliente.php" class="add-movie-btn">
         Registrar Nuevo Cliente
       </a>
     </div>
+
+    <?php if (count($clientes) == 0) { ?>
+      <div class="empty-movies-container">
+        <p>No hay clientes registrados</p>
+      </div>
+    <?php } ?>
+
+
     <table class="movies-table">
       <thead>
         <tr>
@@ -45,6 +55,9 @@ $clientes = $db->array("SELECT * FROM tblcliente");
           <th>Curp</th>
           <th>Membresía</th>
           <th>Fecha de registro</th>
+          <th>
+            Acciones
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -56,6 +69,14 @@ $clientes = $db->array("SELECT * FROM tblcliente");
             <td><?php echo $cliente['curp'] ?></td>
             <td><?php echo $cliente['tipo_membresia'] ?></td>
             <td><?php echo $cliente['fecha_inicio_membresia'] ?></td>
+            <td>
+              <a href="/AOARegistroCliente.php?id=<?php echo $cliente['id_cliente'] ?>" class="edit-movie-btn">
+                Editar
+              </a>
+              <a href="/AOAEliminarCliente.php?id=<?php echo $cliente['id_cliente'] ?>" class="delete-movie-btn">
+                Eliminar
+              </a>
+            </td>
           </tr>
         <?php } ?>
       </tbody>

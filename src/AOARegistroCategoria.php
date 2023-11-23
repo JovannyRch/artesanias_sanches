@@ -1,6 +1,11 @@
 <?php
 include_once('./validators.php');
+include_once('./db.php');
+include_once('./aoa_crear_categoria.php');
+include_once('./aoa_editar_categoria.php');
 session_start();
+
+$db = new Database();
 
 $categoria = "";
 
@@ -18,11 +23,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       throw new Exception("El nombre es requerido");
     }
     $_SESSION['success_message'] = "Registro exitoso";
+
+    if (isset($_POST['id'])) {
+      $id = $_POST['id'];
+      editarCategoria($db, $id, $categoria);
+    } else {
+      crearCategoria($db, $categoria);
+    }
+
+
+    header("Location: ./AOAAdminCategorias.php");
   } catch (Exception $e) {
     $_SESSION['message'] = $e->getMessage();
   }
 }
 
+$is_edit = isset($_GET['id']);
+$id = null;
+
+if ($is_edit) {
+  $id = $_GET['id'];
+}
+
+if (isset($id)) {
+  $categoria = $db->row("SELECT * FROM tblcategoria WHERE id_categoria = $id");
+  $categoria = $categoria['nombre'];
+}
 
 ?>
 
@@ -51,10 +77,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
   </header>
   <div class="form-container">
-    <h1>Registro de categoría</h1>
+    <h1>
+      <?php if ($is_edit) { ?>
+        Editar actor
+      <?php } else { ?>
+        Registrar actor
+      <?php } ?>
+    </h1>
     <form class="login-form" method="POST" action="./AOARegistroCategoria.php">
+
+
       <label for="nombre">Nombre de la categoría:</label>
       <input type="text" id="nombre" name="nombre" value="<?= $categoria ?>" />
+
+      <?php if ($is_edit) { ?>
+        <input type="hidden" name="id" value="<?php echo $id ?>" />
+      <?php } ?>
+
 
       <br />
       <br />
@@ -75,7 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         unset($_SESSION['success_message']);
       } ?>
 
-      <button type="submit">Guardar</button>
+
+
+      <button type="submit">
+        <?php if ($is_edit) { ?>
+          Editar
+        <?php } else { ?>
+          Registrar
+        <?php } ?>
+      </button>
     </form>
   </div>
   <footer class="site-footer">

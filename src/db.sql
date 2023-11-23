@@ -55,3 +55,6 @@ create table tbl_pelicula(
     clasificacion varchar(10) not null,
     imagen varchar(255) not null
 );
+
+alter table tbl_pelicula add id_director int not null;
+alter table tbl_pelicula add constraint fk_pelicula_director foreign key (id_director) references tbldirector(id_director);

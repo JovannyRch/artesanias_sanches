@@ -1,3 +1,16 @@
+<?php
+
+
+session_start();
+include_once('./db.php');
+include_once('./aoa_leer_peliculas.php');
+
+$db = new Database();
+
+$peliculas = leerPeliculas($db);
+$has_peliculas = count($peliculas) > 0;
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -25,78 +38,49 @@
   <div class="movies-container">
     <h1>Listado de películas</h1>
     <div class="add-button-container">
-      <button onclick="location.href='/admin/AOARegistroPelicula.php'" class="add-movie-btn">
+      <button onclick="location.href='/AOARegistroPelicula.php'" class="add-movie-btn">
         Registrar Nueva Película
       </button>
     </div>
-    <table class="movies-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Categoría</th>
-          <th>Director</th>
-          <th>Actor</th>
-          <th>País</th>
-          <th>Año</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>El Viaje de Chihiro</td>
-          <td>Animación</td>
-          <td>Hayao Miyazaki</td>
-          <td>Rumi Hiiragi</td>
-          <td>Japón</td>
-          <td>2001</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Paw Patrol</td>
-          <td>Animación</td>
-          <td>Cal Brunker</td>
-          <td>Kim Kardashian</td>
-          <td>Estados Unidos</td>
-          <td>2023</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>The Marvels</td>
-          <td>Acción</td>
-          <td>Nia DaCosta</td>
-          <td>Brie Larson</td>
-          <td>Estados Unidos</td>
-          <td>2023</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Sobreviviendo a mix XV</td>
-          <td>Comedia</td>
-          <td>Chava Cartas</td>
-          <td>Memo Villegas</td>
-          <td>México</td>
-          <td>2023</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <?php if ($has_peliculas) { ?>
+      <table class="movies-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Director</th>
+            <th>Actor 1</th>
+            <th>Actor 2</th>
+            <th>País</th>
+            <th>Año</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($peliculas as $pelicula) { ?>
+            <tr>
+              <td><?php echo $pelicula['id_pelicula'] ?></td>
+              <td><?php echo $pelicula['nombre'] ?></td>
+              <td><?php echo $pelicula['categoria'] ?></td>
+              <td><?php echo $pelicula['director'] ?></td>
+              <td><?php echo $pelicula['actor1']['nombre'] ?></td>
+              <td><?php echo $pelicula['actor2']['nombre'] ?></td>
+              <td><?php echo $pelicula['pais'] ?></td>
+              <td><?php echo $pelicula['anio_lanzamiento'] ?></td>
+              <td>
+                <a href="/AOARegistroPelicula.php?id=<?php echo $pelicula['id_pelicula'] ?>">Editar</a>
+                <a href="/AOAEliminarPelicula.php?id=<?php echo $pelicula['id_pelicula'] ?>">Eliminar</a>
+              </td>
+            </tr>
+
+          <?php } ?>
+
+        </tbody>
+      </table>
+    <?php } else { ?>
+      <p>No hay películas registradas</p>
+    <?php } ?>
   </div>
   <footer class="site-footer">
     <div class="footer-bottom">

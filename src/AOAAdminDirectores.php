@@ -1,3 +1,17 @@
+<?php
+
+
+session_start();
+
+include_once('./db.php');
+include_once('./aoa_leer_director.php');
+
+$db = new Database();
+
+$directores = leerDirectores($db);
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -25,7 +39,7 @@
   <div class="movies-container">
     <h1>Listado de directores</h1>
     <div class="add-button-container">
-      <button onclick="location.href='/admin/AOARegistroDirector.php'" class="add-movie-btn">
+      <button onclick="location.href='/AOARegistroDirector.php'" class="add-movie-btn">
         Registrar Director
       </button>
     </div>
@@ -34,57 +48,25 @@
         <tr>
           <th>ID</th>
           <th>Nombre</th>
-          <th>Email</th>
           <th>Nacionalidad</th>
           <th>Fecha nacimiento</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Hayao Miyazaki</td>
-          <td>hayao.miyazaki@example.com</td>
-          <td>Japonesa</td>
-          <td>1941-01-05</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Chava Cartas</td>
-          <td>chava.cartas@example.com</td>
-          <td>Mexicano</td>
-          <td>1971-09-15</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Nia DaCosta</td>
-          <td>nia.dacosta@example.com</td>
-          <td>Estado Unidense</td>
-          <td>1989-11-08</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Cal Brunker</td>
-          <td>cal.brunker@example.com</td>
-          <td>Mexicana</td>
-          <td>1978-11-16</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
+        <?php foreach ($directores as $director) { ?>
+          <tr>
+            <td><?php echo $director['id_director'] ?></td>
+            <td><?php echo $director['nombre'] . ' ' . $director['ap_paterno'] . ' ' . $director['ap_materno'] ?></td>
+
+            <td><?php echo $director['nacionalidad'] ?></td>
+            <td><?php echo $director['fecha_nacimiento'] ?></td>
+            <td>
+              <a href="/AOARegistroDirector.php?id=<?php echo $director['id_director'] ?>">Editar</a>
+              <a href="/AOAEliminarDirector.php?id=<?php echo $director['id_director'] ?>">Eliminar</a>
+            </td>
+          </tr>
+        <?php } ?>
       </tbody>
     </table>
   </div>

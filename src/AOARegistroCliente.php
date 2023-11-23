@@ -1,6 +1,9 @@
 <?php
 include_once('./validators.php');
-include_once('./../db.php');
+include_once('./db.php');
+include_once('./aoa_crear_cliente.php');
+include_once('./aoa_editar_cliente.php');
+
 session_start();
 
 $db = new Database();
@@ -22,6 +25,22 @@ $materno = "";
 $rfc = "";
 $curp = "";
 $membresia = "";
+
+$is_editing = false;
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $cliente = $db->row("SELECT * FROM tblcliente WHERE id_cliente = $id");
+
+    $nombre = $cliente['nombre'];
+    $paterno = $cliente['ap_paterno'];
+    $materno = $cliente['ap_materno'];
+    $rfc = $cliente['rfc'];
+    $curp = $cliente['curp'];
+    $membresia = $cliente['tipo_membresia'];
+
+    $is_editing = true;
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -84,29 +103,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception("El CURP es requerido");
         }
 
-        $fecha_termino = $membresia == "mensual" ? "DATE_ADD(NOW(), INTERVAL 1 MONTH)" : "DATE_ADD(NOW(), INTERVAL 1 YEAR)";
+        if ($is_editing) {
+            editarCliente($db, $id, $nombre, $paterno, $materno, $rfc, $curp, $membresia);
+        } else {
+            crearCliente($db, $nombre, $paterno, $materno, $rfc, $curp, $membresia);
+        }
 
-        $db->query("INSERT INTO tblcliente
-            (nombre, ap_paterno, ap_materno, rfc, curp, tipo_membresia, fecha_inicio_membresia, fecha_termino_membresia)
-            values (
-                '$nombre',
-                '$paterno',
-                '$materno',
-                '$rfc',
-                '$curp',
-                '$membresia',
-                NOW(),
-                $fecha_termino
-            )
-         ");
-
-
-        $_SESSION['success_message'] = "Registro exitoso";
+        header('Location: ./AOAAdminInicio.php');
     } catch (Exception $e) {
         $_SESSION['message'] = $e->getMessage();
     }
 }
 
+$actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCliente.php";
 
 ?>
 
@@ -136,8 +145,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </nav>
     </header>
     <div class="form-container">
-        <h1>Registro de cliente</h1>
-        <form class="login-form" method="POST" action="./AOARegistroCliente.php">
+        <h1>
+            <?php if ($is_editing) { ?>
+                Editar cliente
+            <?php } else { ?>
+                Registro de cliente
+            <?php } ?>
+
+        </h1>
+        <form class="login-form" method="POST" action="<?= $actionPath ?>">
             <label for="nombre">Nombre del cliente:</label>
             <input type="text" id="nombre" name="nombre" value="<?= $nombre ?>" required />
 
@@ -149,16 +165,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="materno">Apellido materno:</label>
             <input type="text" id="materno" name="materno" value="<?= $materno ?>" required />
 
-            <!-- Fecha de nacimiento -->
-            <label for="fecha">Fecha de nacimiento:</label>
-            <input class="text-black" type="date" id="fecha" name="fecha" required />
+            <?php if (!$is_editing) { ?>
+                <!-- Fecha de nacimiento -->
+                <label for="fecha">Fecha de nacimiento:</label>
+                <input class="text-black" type="date" id="fecha" name="fecha" required />
 
-            <!-- Genero -->
-            <label for="genero">Genero:</label>
-            <select id="genero" name="genero" class="text-black" required>
-                <option value="H">Hombre</option>
-                <option value="M">Mujer</option>
-            </select>
+                <!-- Genero -->
+                <label for="genero">Genero:</label>
+                <select id="genero" name="genero" class="text-black" required>
+                    <option value="H">Hombre</option>
+                    <option value="M">Mujer</option>
+                </select>
+            <?php } ?>
 
             <br />
             <!-- Estado -->
@@ -173,14 +191,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" id="rfc" name="rfc" value="<?= $rfc ?>" required />
 
             <div class="flex gap-4">
-                <div>
+                <div class="w-full">
                     <label for="curp">CURP:</label>
                     <input type="text" id="curp" name="curp" value="<?= $curp ?>" required />
                 </div>
 
-                <div>
-                    <button type="button" id="generar">Generar CURP</button>
-                </div>
+                <? if (!$is_editing) { ?>
+                    <div>
+                        <button type="button" id="generar">Generar CURP</button>
+                    </div>
+                <? } ?>
             </div>
             <!-- Membresia -->
             <label for="membresia">Membresia:</label>
@@ -216,36 +236,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </div>
 
-            <div class="mb-4">
-                <span>Información de la tarjeta</span>
-            </div>
+            <!-- hide if is editing -->
 
-            <!-- Numero de tarjeta -->
-            <label for="numero_tarjeta">Número de tarjeta:</label>
-            <input type="text" id="numero_tarjeta" name="numero_tarjeta" required />
+            <?php if (!$is_editing) { ?>
+                <div class="mb-4">
+                    <span>Información de la tarjeta</span>
+                </div>
 
-            <!-- Precio a pagar -->
-            <label for="precio">Precio a pagar:</label>
-            <input type="number" id="precio" class="text-black" name="precio" required />
+                <!-- Numero de tarjeta -->
+                <label for="numero_tarjeta">Número de tarjeta:</label>
+                <input type="text" id="numero_tarjeta" name="numero_tarjeta" required />
 
-
-            <!-- Banco -->
-            <label for="banco">Banco:</label>
-            <input type="text" id="banco" name="banco" required />
+                <!-- Precio a pagar -->
+                <label for="precio">Precio a pagar:</label>
+                <input type="number" id="precio" class="text-black" name="precio" required />
 
 
-            <!-- Fecha de expiracion -->
-            <label for="fecha_expiracion">Fecha de expiración:</label>
-            <input class="text-black" id="fecha_expiracion" name="fecha_expiracion" required placeholder="MM/AA" />
+                <!-- Banco -->
+                <label for="banco">Banco:</label>
+                <input type="text" id="banco" name="banco" required />
 
 
-            <!-- Codigo de seguridad -->
-            <label for="codigo_seguridad">Código de seguridad:</label>
-            <input class="text-black" id="codigo_seguridad" name="codigo_seguridad" required placeholder="CVV" />
+                <!-- Fecha de expiracion -->
+                <label for="fecha_expiracion">Fecha de expiración:</label>
+                <input class="text-black" id="fecha_expiracion" name="fecha_expiracion" required placeholder="MM/AA" />
+
+
+                <!-- Codigo de seguridad -->
+                <label for="codigo_seguridad">Código de seguridad:</label>
+                <input class="text-black" id="codigo_seguridad" name="codigo_seguridad" required placeholder="CVV" />
+            <?php } ?>
+
+
+
+
 
             <br />
             <br />
-            <button type="submit">Guardar</button>
+            <button type="submit">
+                <?php if ($is_editing) { ?>
+                    Editar
+                <?php } else { ?>
+                    Registrar
+                <?php } ?>
+            </button>
             <br />
             <br />
         </form>

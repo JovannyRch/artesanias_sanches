@@ -1,11 +1,54 @@
 <?php
 include_once('./validators.php');
+include_once('./aoa_crear_actor.php');
+include_once('./aoa_editar_actor.php');
+include_once('./db.php');
 session_start();
+
+
+$countries = [
+  [
+    'id' => 'japon',
+    'name' => 'Japón'
+  ],
+  [
+    'id' => 'mexico',
+    'name' => 'México'
+  ],
+  [
+    'id' => 'usa',
+    'name' => 'Estados Unidos'
+  ]
+];
+
+
+$db = new Database();
+
 
 $nombre = "";
 $paterno = "";
 $materno = "";
 $fecha = "";
+$nacionalidad = "";
+
+
+$is_edit = isset($_GET['id']);
+
+$id = null;
+
+if ($is_edit) {
+  $id = $_GET['id'];
+}
+
+if ($is_edit) {
+  $actor = $db->row("SELECT * FROM tblactor WHERE id_actor = $id");
+  $nombre = $actor['nombre'];
+  $paterno = $actor['ap_paterno'];
+  $materno = $actor['ap_materno'];
+  $fecha = $actor['fecha_nacimiento'];
+  $nacionalidad = $actor['nacionalidad'];
+}
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -15,6 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $paterno = $_POST['paterno'];
     $materno = $_POST['materno'];
     $fecha = $_POST['fecha'];
+    $nacionalidad = $_POST['nacionalidad'];
+
 
 
     if (isset($_POST['nombre']) && strlen($_POST['nombre']) > 0) {
@@ -52,13 +97,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       $validation = isValidBirthDate($fecha);
       if (!$validation) {
-        throw new Exception("La fecha de nacimiento no es válida, formatos válidos: AAA-MM-DD o DD/MM/AAA");
+        throw new Exception("La fecha de nacimiento no es válida, formatos válidos: AAAA-MM-DD o DD/MM/AAAA");
       }
     } else {
       throw new Exception("La fecha de nacimiento es requerida");
     }
 
-
+    if (isset($_POST['id'])) {
+      $id = $_POST['id'];
+      editarActor($db, $id, $nombre, $paterno, $materno, $nacionalidad, $fecha);
+    } else {
+      crearActor($db, $nombre, $paterno, $materno, $nacionalidad, $fecha);
+    }
+    header("Location: ./AOAAdminActores.php");
 
     $_SESSION['success_message'] = "Registro exitoso";
   } catch (Exception $e) {
@@ -66,15 +117,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8" />
-  <title>Registro director - PelisNow</title>
-  <link rel="stylesheet" href="./../styles.css" />
+  <title>Registro actor - PelisNow</title>
+  <link rel="stylesheet" href="../styles.css" />
 </head>
 
 <body>
@@ -92,8 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </nav>
   </header>
   <div class="form-container">
-    <h1>Registro de director</h1>
-    <form class="login-form" method="POST" action="./AOARegistroDirector.php">
+    <h1>Registro de actor</h1>
+    <form class="login-form" method="POST" action="./AOARegistroActor.php">
+      <?php if ($is_edit) { ?>
+        <input type="hidden" name="id" value="<?= $id ?>" />
+      <?php } ?>
       <label for="nombre">Nombre:</label>
       <input type="text" id="nombre" name="nombre" value="<?= $nombre ?>" required />
 
@@ -103,15 +157,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="materno">A. Materno:</label>
       <input type="text" id="materno" name="materno" value="<?= $materno ?>" required />
 
-      <label for="country">País de nacimiento:</label>
-      <select id="country" name="country" required>
-        <option value="japon">Japón</option>
-        <option value="usa">Estados Unidos</option>
-        <option value="mexico">México</option>
+      <label for="nacionalidad">País de nacimiento:</label>
+      <select id="nacionalidad" name="nacionalidad" required>
+        <?php foreach ($countries as $country) { ?>
+          <option value="<?= $country['id'] ?>" <?= $country['id'] === $nacionalidad ? 'selected' : '' ?>><?= $country['name'] ?></option>
+        <?php } ?>
       </select>
 
       <label for="fecha">Fecha de nacimiento:</label>
-      <input type="text" id="fecha" name="fecha" value="<?= $fecha ?>" required placeholder="AAAA-MM-DD o DD/MM/AAAA" />
+      <input type="text" id="fecha" name="fecha" value="<?= $fecha ?>" required placeholder="AAA-MM-DD o DD/MM/AAA" />
       <?php if (isset($_SESSION['message'])) { ?>
         <div class="alert">
           <p> Error: <?php echo $_SESSION['message']; ?></p>
@@ -129,14 +183,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       } ?>
       <br />
       <br />
-      <button type="submit">Guardar</button>
+      <button type="submit">
+        <?php if ($is_edit) { ?>
+          Editar
+        <?php } else { ?>
+          Registrar
+        <?php } ?>
+      </button>
     </form>
   </div>
+
   <footer class="site-footer">
     <div class="footer-bottom">
       <p>AOA – PW1 – Noviembre/2023</p>
     </div>
   </footer>
 </body>
+
+<script>
+  function onSubmit(token) {
+    window.location.href = "AOAInicio.php";
+  }
+</script>
 
 </html>

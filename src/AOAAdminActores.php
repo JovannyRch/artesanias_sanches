@@ -1,3 +1,19 @@
+<?php
+
+
+session_start();
+
+include_once('./db.php');
+include_once('./aoa_leer_actor.php');
+
+$db = new Database();
+
+$actores = leerActores($db);
+
+$has_items = count($actores) > 0;
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -25,112 +41,41 @@
   <div class="movies-container">
     <h1>Listado de actores</h1>
     <div class="add-button-container">
-      <button onclick="location.href='/admin/AOARegistroActor.php'" class="add-movie-btn">
+      <button onclick="location.href='/AOARegistroActor.php'" class="add-movie-btn">
         Registrar Actor
       </button>
     </div>
-    <table class="movies-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>Nacionalidad</th>
-          <th>Fecha nacimiento</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Rumi Hiiragi</td>
-          <td>rumi.hiiragi@example.com</td>
-          <td>Japonesa</td>
-          <td>1987-08-01</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Memo Villegas</td>
-          <td>memo.villegas@example.com</td>
-          <td>Mexicano</td>
-          <td>1987-05-26</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Brie Larson</td>
-          <td>brie.larson@example.com</td>
-          <td>Estado Unidense</td>
-          <td>1989-10-01</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Kim Kardashian</td>
-          <td>kim.kardashian@example.com</td>
-          <td>Estado Unidense</td>
-          <td>1980-10-21</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Jason Marsden</td>
-          <td>jason.marsden@example.com</td>
-          <td>Japonesa</td>
-          <td>1988-03-23</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Verónica Bravo</td>
-          <td>vero.bravo@example.com</td>
-          <td>Mexicana</td>
-          <td>1980-10-21</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>Isman Vellani</td>
-          <td>isman.vellani@example.com</td>
-          <td>Estado Unidense</td>
-          <td>2002-09-03</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-        <tr>
-          <td>8</td>
-          <td>Ron Pardo</td>
-          <td>ron.pardo@example.com</td>
-          <td>Canadiense</td>
-          <td>1967-05-15</td>
-          <td>
-            <button class="btn-play">Editar</button>
-            <button class="btn-play">Eliminar</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <?php if ($has_items) { ?>
+      <table class="movies-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Nacionalidad</th>
+            <th>Fecha nacimiento</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($actores as $actor) { ?>
+            <tr>
+              <td><?php echo $actor['id_actor'] ?></td>
+              <td><?php echo $actor['nombre'] . ' ' . $actor['ap_paterno'] . ' ' . $actor['ap_materno'] ?></td>
+
+              <td><?php echo $actor['nacionalidad'] ?></td>
+              <td><?php echo $actor['fecha_nacimiento'] ?></td>
+              <td>
+                <a href="/AOARegistroActor.php?id=<?php echo $actor['id_actor'] ?>">Editar</a>
+                <a href="/AOAEliminarActor.php?id=<?php echo $actor['id_actor'] ?>">Eliminar</a>
+              </td>
+            </tr>
+          <?php } ?>
+        </tbody>
+      </table>
+    <?php } else { ?>
+      <p>No hay actores registrados</p>
+    <?php } ?>
+
   </div>
   <footer class="site-footer">
     <div class="footer-bottom">
