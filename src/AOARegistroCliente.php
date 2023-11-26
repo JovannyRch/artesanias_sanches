@@ -136,6 +136,7 @@ $actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCl
             <div class="navbar-brand">PelisNow</div>
             <div class="navbar-nav">
                 <a href="./../AOAAdminInicio.php" class="nav-item">Inicio</a>
+                <a href="./../AOAAdminReportes.php" class="nav-item">Reportes</a>
                 <a href="../AOAAdminPeliculas.php" class="nav-item">Películas</a>
                 <a href="../AOAAdminCategorias.php" class="nav-item">Categorías</a>
                 <a href="../AOAAdminDirectores.php" class="nav-item">Directores</a>
