@@ -202,13 +202,7 @@ $actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCl
                     </div>
                 <? } ?>
             </div>
-            <!-- Membresia -->
-            <label for="membresia">Membresia:</label>
-            <select id="membresia" name="membresia" class="text-black" required>
-                <?php foreach ($tipos_membresias as $membresia) { ?>
-                    <option value="<?= $membresia['id'] ?>"><?= $membresia['nombre'] ?></option>
-                <?php } ?>
-            </select>
+
 
             <?php if (isset($_SESSION['message'])) { ?>
                 <div class="alert">
@@ -239,32 +233,63 @@ $actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCl
             <!-- hide if is editing -->
 
             <?php if (!$is_editing) { ?>
-                <div class="mb-4">
+
+                <!-- Membresia -->
+                <label for="membresia">Membresia:</label>
+                <select id="membresia" name="membresia" class="text-black mb-4" required>
+                    <?php foreach ($tipos_membresias as $membresia) { ?>
+                        <option value="<?= $membresia['id'] ?>"><?= $membresia['nombre'] ?></option>
+                    <?php } ?>
+                </select>
+
+                <div class="my-4">
                     <span>Información de la tarjeta</span>
                 </div>
 
                 <!-- Numero de tarjeta -->
                 <label for="numero_tarjeta">Número de tarjeta:</label>
-                <input type="text" id="numero_tarjeta" name="numero_tarjeta" required />
+                <input type="text" id="numero_tarjeta" name="numero_tarjeta" required onchange="validarNumeroTarjeta(this)" />
 
-                <!-- Precio a pagar -->
-                <label for="precio">Precio a pagar:</label>
-                <input type="number" id="precio" class="text-black" name="precio" required />
+
+
+
+                <!-- # de tarjeta errror message -->
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" style="display:none" id="numero_tarjeta_error"></div>
 
 
                 <!-- Banco -->
                 <label for="banco">Banco:</label>
-                <input type="text" id="banco" name="banco" required />
+                <input type="text" id="banco" name="banco" required onchange="validarBanco(this)" />
+
+                <!-- Error message -->
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" style="display:none" id="banco_error"></div>
+
+
+                <!-- Precio a pagar -->
+                <label for="precio">Precio a pagar:</label>
+                <input type="number" id="precio" class="text-black" name="precio" required onchange="validarPrecio(this)" />
+
+                <!-- Error message -->
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" style="display:none" id="precio_error"></div>
+
 
 
                 <!-- Fecha de expiracion -->
                 <label for="fecha_expiracion">Fecha de expiración:</label>
-                <input class="text-black" id="fecha_expiracion" name="fecha_expiracion" required placeholder="MM/AA" />
+                <input class="text-black" id="fecha_expiracion" name="fecha_expiracion" required placeholder="MM/AA" onchange="validarFecha(this)" />
+
+                <!-- Error message -->
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative my-4" style="display:none" id="fecha_expiracion_error"></div>
 
 
                 <!-- Codigo de seguridad -->
                 <label for="codigo_seguridad">Código de seguridad:</label>
                 <input class="text-black" id="codigo_seguridad" name="codigo_seguridad" required placeholder="CVV" />
+
+                <!-- Fecha inicio de la suscripcion -->
+                <label for="fecha_inicio_suscripcion">Fecha inicio de la suscripción:</label>
+                <input class="text-black" type="date" id="fecha_inicio_suscripcion" name="fecha_inicio_suscripcion" readonly />
+
             <?php } ?>
 
 
@@ -326,6 +351,114 @@ $actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCl
         $("#curp").val(generarCURP());
     });
 
+
+    function validarNumeroTarjeta(input) {
+        var numero_tarjeta = input.value;
+        var error_message = document.getElementById("numero_tarjeta_error");
+        if (numero_tarjeta.length < 16) {
+            error_message.innerHTML = "El número de tarjeta debe tener 16 dígitos";
+            error_message.style.display = "block";
+            return;
+        }
+        if (!/^[0-9]+$/.test(numero_tarjeta)) {
+            error_message.innerHTML = "El número de tarjeta solo puede contener números";
+            error_message.style.display = "block";
+            return;
+        }
+
+        error_message.style.display = "none";
+        error_message.innerHTML = "";
+    }
+
+    function validarBanco(input) {
+        var banco = input.value;
+        var error_message = document.getElementById("banco_error");
+
+        if (!/^[a-zA-Z]+$/.test(banco)) {
+            error_message.innerHTML = "El nombre del banco solo puede contener letras";
+            error_message.style.display = "block";
+            return;
+        }
+
+        error_message.style.display = "none";
+        error_message.innerHTML = "";
+    }
+
+    function validarPrecio(input) {
+        var precio = input.value;
+        var error_message = document.getElementById("precio_error");
+
+
+
+        if (precio < 0) {
+            error_message.innerHTML = "El precio no puede ser negativo";
+            error_message.style.display = "block";
+            return;
+        }
+
+        if (precio < 0.01) {
+            error_message.innerHTML = "El precio no puede ser menor a 0.01";
+            error_message.style.display = "block";
+            return;
+        }
+
+        error_message.style.display = "none";
+        error_message.innerHTML = "";
+    }
+
+    function validarFecha(input) {
+
+        var fecha = input.value;
+        var error_message = document.getElementById("fecha_expiracion_error");
+
+        // MM/AA
+        if (fecha.length < 5) {
+            error_message.innerHTML = "La fecha de expiración debe tener el formato MM/AA";
+            error_message.style.display = "block";
+            return;
+        }
+
+        //Check slash
+        if (fecha.charAt(2) != "/") {
+            error_message.innerHTML = "La fecha de expiración debe tener el formato MM/AA";
+            error_message.style.display = "block";
+            return;
+        }
+
+        //Check month
+        var month = fecha.slice(0, 2);
+        if (month < 1 || month > 12) {
+            error_message.innerHTML = "El mes debe estar entre 1 y 12";
+            error_message.style.display = "block";
+            return;
+        }
+
+        //Check if moth is number
+        if (!/^[0-9]+$/.test(month)) {
+            error_message.innerHTML = "El mes debe ser un número";
+            error_message.style.display = "block";
+            return;
+        }
+
+        //Check year
+        var year = fecha.slice(3, 5);
+        if (year < 0 || year > 99) {
+            error_message.innerHTML = "El año debe estar entre 0 y 99";
+            error_message.style.display = "block";
+            return;
+        }
+
+        //Check if year is number
+        if (!/^[0-9]+$/.test(year)) {
+            error_message.innerHTML = "El año debe ser un número";
+            error_message.style.display = "block";
+            return;
+        }
+
+        error_message.style.display = "none";
+        error_message.innerHTML = "";
+    }
+
     // render estados
     // on load
     window.onload = function() {
@@ -337,6 +470,14 @@ $actionPath = $is_editing ? "./AOARegistroCliente.php?id=$id" : "./AOARegistroCl
             el.value = opt;
             select.appendChild(el);
         }
+
+        //fecha_inicio_suscripcion
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth());
+        var yyyy = today.getFullYear();
+
+        document.getElementById("fecha_inicio_suscripcion").value = yyyy + '-' + mm + '-' + dd;
     };
 </script>
 
