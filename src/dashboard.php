@@ -1,112 +1,92 @@
 <?php
+include_once './menu.php';
+session_start();
+
+
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.php");
+    exit;
+}
 
 $title = "Dashboard";
-$content = '
-    <div class="p-4">
-        <h2 class="text-xl font-bold mb-4">Bienvenido al Dashboard de SIMAQ</h2>
 
-        <!-- Resúmenes o estadísticas rápidas -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="bg-white shadow rounded p-4">
-                <h3 class="font-bold text-lg">Empleados Activos</h3>
-                <p>50</p>
-                <!-- Más información si es necesario -->
+
+?>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <?php echo $title ?> - SIMAQ
+    </title>
+    <script src="./assets//tailwind.js"></script>
+    <script src="./assets/chart.js"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-900 antialiased">
+
+    <header class="sticky top-0 z-40 flex-none w-full mx-auto bg-white border-b border-gray-200 dark:border-gray-600 dark:bg-gray-800">
+        <div class="flex items-center justify-between w-full px-3 py-3 mx-auto max-w-8xl lg:px-4">
+            <div class="flex items-center">
+                <button id="toggleSidebarMobile" aria-expanded="true" aria-controls="sidebar" class="p-2 mr-2 text-gray-500 rounded cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                    <svg id="toggleSidebarMobileHamburger" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <svg id="toggleSidebarMobileClose" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <div class="flex items-center justify-between">
+
+                    <a href="/" class="flex">
+                        <img src="./assets/logo.png" alt="Imagen de ejemplo" class="inline-block h-8">
+                        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white ml-4">
+                            SIMAQ
+                        </span>
+                    </a>
+                </div>
+
             </div>
 
-            <div class="bg-white shadow rounded p-4">
-                <h3 class="font-bold text-lg">Nómina Pendiente</h3>
-                <p>$10,000</p>
-                <!-- Más información si es necesario -->
-            </div>
+            <div class="flex items-center">
+                <ul id="flowbiteMenu" class="flex-col hidden pt-6 lg:flex-row lg:self-center lg:py-0 lg:flex">
 
-            <div class="bg-white shadow rounded p-4">
-                <h3 class="font-bold text-lg">Alertas</h3>
-                <p>Ninguna alerta actual</p>
-                <!-- Más información si es necesario -->
+
+                    <?php foreach ($menu as $item) { ?>
+                        <li class="mb-3 lg:px-2 xl:px-2 lg:mb-0">
+                            <a href="<?php echo $item['url']; ?>" class="text-sm font-medium text-gray-900 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-500"><?php echo $item['title']; ?></a>
+                        </li>
+                    <?php } ?>
+
+                </ul>
+
+                <a href="./logout.php" class="hidden xl:inline-flex items-center text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-1 sm:ml-3">
+                    Cerrar sesión
+                </a>
             </div>
         </div>
 
-        <!-- Otras secciones del dashboard aquí -->
-    </div>
-';
+    </header>
 
-$content .= '
-    <!-- Gráficas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <!-- Gráfico de Barras -->
-        <div class="bg-white shadow rounded p-4">
-            <h3 class="font-bold text-lg">Reporte de Nómina Mensual</h3>
-            <canvas id="barChart"></canvas>
+
+
+    <!-- Contenido Principal -->
+    <main class="container mx-auto p-4 flex-1">
+
+        <h1 class="inline-block mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+            <?php echo $title ?>
+        </h1>
+    </main>
+
+    <!-- Pie de Página -->
+    <footer class="bg-blue-600 text-white mt-8 w-screen">
+        <div class="container mx-auto p-4 text-center">
+            <p>&copy; <?php echo date("Y"); ?> SIMAQ - Todos los derechos reservados</p>
         </div>
+    </footer>
 
-        <!-- Gráfico Circular -->
-        <div class="bg-white shadow rounded p-4">
-            <h3 class="font-bold text-lg">Distribución por Departamento</h3>
-            <canvas id="pieChart"></canvas>
-        </div>
-    </div>
-';
+</body>
 
-
-$content .= '
-    <script>
-        // Gráfico de Barras
-        var ctxBar = document.getElementById("barChart").getContext("2d");
-        var barChart = new Chart(ctxBar, {
-            type: "bar",
-            data: {
-                labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
-                datasets: [{
-                    label: "Nómina",
-                    data: [12000, 19000, 3000, 5000, 2000, 3000],
-                    backgroundColor: [
-                        "rgba(255, 99, 132, 0.2)",
-                        "rgba(54, 162, 235, 0.2)",
-                        "rgba(255, 206, 86, 0.2)",
-                        "rgba(75, 192, 192, 0.2)",
-                        "rgba(153, 102, 255, 0.2)",
-                        "rgba(255, 159, 64, 0.2)"
-                    ],
-                    borderColor: [
-                        "rgba(255, 99, 132, 1)",
-                        "rgba(54, 162, 235, 1)",
-                        "rgba(255, 206, 86, 1)",
-                        "rgba(75, 192, 192, 1)",
-                        "rgba(153, 102, 255, 1)",
-                        "rgba(255, 159, 64, 1)"
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-
-        // Gráfico Circular
-        var ctxPie = document.getElementById("pieChart").getContext("2d");
-        var pieChart = new Chart(ctxPie, {
-            type: "pie",
-            data: {
-                labels: ["Finanzas", "RRHH", "IT", "Ventas"],
-                datasets: [{
-                    data: [10, 20, 30, 40],
-                    backgroundColor: [
-                        "rgba(255, 99, 132, 0.5)",
-                        "rgba(54, 162, 235, 0.5)",
-                        "rgba(255, 206, 86, 0.5)",
-                        "rgba(75, 192, 192, 0.5)"
-                    ]
-                }]
-            }
-        });
-    </script>
-';
-
-include('layout.php');
+</html>
