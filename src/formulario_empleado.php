@@ -1,5 +1,5 @@
 <?php
-include_once './menu.php';
+include_once './const.php';
 include_once './db.php';
 
 
@@ -28,6 +28,7 @@ $empleado = [
     "fecha_ingreso" => "",
     "rfc" => "XEXX010101HNE",
     "curp" => "XEXX010101HNEXXXA4",
+    "salario" => 0
 ];
 
 if ($is_edit) {
@@ -56,13 +57,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha_ingreso = $_POST['fecha_ingreso'];
     $curp = $_POST['curp'];
     $rfc = $_POST['rfc'];
+    $salario = $_POST['salario'];
 
     //2023-11-01
     $fecha_ingreso = date("Y-m-d", strtotime($fecha_ingreso));
 
     if (isset($_POST['id'])) {
         $id = $_POST['id'];
-        $response = $db->query("UPDATE empleados SET nombre = '$nombre', curp = '$curp', rfc = '$rfc', paterno = '$paterno', materno = '$materno', telefono = '$telefono', email = '$email', departamento_id = $departamento_id, cargo_id = $cargo_id, estatus_empleado = '$status', fecha_ingreso = '$fecha_ingreso' WHERE id = $id");
+        $response = $db->query("UPDATE empleados SET nombre = '$nombre', curp = '$curp', rfc = '$rfc', paterno = '$paterno', materno = '$materno', telefono = '$telefono', email = '$email', departamento_id = $departamento_id, cargo_id = $cargo_id, estatus_empleado = '$status', fecha_ingreso = '$fecha_ingreso', salario = $salario WHERE id = $id");
 
         if ($response) {
             header("Location: empleados.php");
@@ -71,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['error'] = "Error al editar el empleado";
         }
     } else {
-        $response = $db->query("INSERT INTO empleados(curp, rfc, nombre, paterno, materno, telefono, email, departamento_id, cargo_id, estatus_empleado, fecha_ingreso) VALUES ('$curp', '$rfc', '$nombre', '$paterno', '$materno', '$telefono', '$email', $departamento_id, $cargo_id, '$status', '$fecha_ingreso')");
-
+        $response = $db->query("INSERT INTO empleados(curp, rfc, nombre, paterno, materno, telefono, email, departamento_id, cargo_id, estatus_empleado, fecha_ingreso, salario) VALUES ('$curp', '$rfc', '$nombre', '$paterno', '$materno', '$telefono', '$email', $departamento_id, $cargo_id, '$status', '$fecha_ingreso', $salario)");
         if ($response) {
             header("Location: empleados.php");
             exit;
@@ -174,13 +175,20 @@ $fields = [
         "value" => $empleado['departamento_id'],
         "options" => $departamentos
     ],
+    "salario" => [
+        "type" => "number",
+        "label" => "Sueldo bruto",
+        "placeholder" => "Ingrese sueldo bruto",
+        "required" => true,
+        "value" => $empleado['salario']
+    ],
     "estatus_empleado" => [
         "type" => "select",
         "label" => "Estado",
         "placeholder" => "Seleccione un estado",
         "required" => true,
-        "value" => $empleado['estatus_empleado'],
-        "options" => $status_options
+        "value" => isset($empleado['estatus_empleado']) ? $empleado['estatus_empleado'] : $status[0],
+        "options" => $status_options,
     ],
     "fecha_ingreso" => [
         "type" => "date",
@@ -276,7 +284,7 @@ if ($is_edit) {
                 <?php } else if ($field['type'] === 'select') { ?>
                     <div class="mb-5">
                         <label for="<?php echo $name; ?>" class="block mb-2 text-sm font-medium text-gray-600 dark:text-gray-200"><?php echo $field['label']; ?></label>
-                        <select name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        <select required="<?php echo $field['required'] ?>" name="<?php echo $name; ?>" id="<?php echo $name; ?>" class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                             <option value=""><?php echo $field['placeholder']; ?></option>
                             <?php foreach ($field['options'] as $option) { ?>
                                 <option value="<?php echo $option['value']; ?>" <?php echo $option['value'] === $field['value'] ? 'selected' : ''; ?>><?php echo $option['label']; ?></option>

@@ -1,5 +1,6 @@
 <?php
-include_once './menu.php';
+include_once './const.php';
+include_once './db.php';
 session_start();
 
 
@@ -9,6 +10,23 @@ if (!isset($_SESSION['usuario'])) {
 }
 
 $title = "Dashboard";
+$db = new Database();
+
+$total_empleados = $db->row("SELECT COUNT(*) total FROM empleados")['total'];
+$total_departamentos = $db->row("SELECT COUNT(*) total FROM departamentos")['total'];
+$total_cargos = $db->row("SELECT COUNT(*) total FROM cargos")['total'];
+
+$cantidad_empelados_por_departamento = $db->array("SELECT d.nombre, COUNT(*) cantidad FROM empleados e INNER JOIN departamentos d ON e.departamento_id = d.id GROUP BY d.id");
+
+$departamentos = $db->array("SELECT * FROM departamentos");
+
+$empleados_por_departamento = array();
+foreach ($departamentos as $departamento) {
+    $empleados_por_departamento[$departamento['nombre']] = $db->array("SELECT empleados.*, cargos.nombre as cargo FROM empleados
+    INNER JOIN cargos ON empleados.cargo_id = cargos.id
+    WHERE departamento_id = " . $departamento['id']);
+}
+
 
 
 ?>
@@ -21,6 +39,7 @@ $title = "Dashboard";
     <title>
         <?php echo $title ?> - SIMAQ
     </title>
+    <script src="./assets/vue.js"></script>
     <script src="./assets//tailwind.js"></script>
     <script src="./assets/chart.js"></script>
 </head>
@@ -78,6 +97,92 @@ $title = "Dashboard";
         <h1 class="inline-block mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
             <?php echo $title ?>
         </h1>
+
+
+        <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+            <div class=" p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                <dl class="grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-3 dark:text-white sm:p-8">
+                    <div class="flex flex-col items-center justify-center">
+                        <dt class="mb-2 text-3xl font-extrabold">
+                            <?php echo $total_empleados; ?>
+                        </dt>
+                        <dd class="text-gray-500 dark:text-gray-400">
+                            Empleados
+                        </dd>
+                    </div>
+
+
+                    <div class="flex flex-col items-center justify-center">
+                        <dt class="mb-2 text-3xl font-extrabold">
+                            <?php echo $total_departamentos; ?>
+                        </dt>
+                        <dd class="text-gray-500 dark:text-gray-400">
+                            Departamentos
+                        </dd>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center">
+                        <dt class="mb-2 text-3xl font-extrabold">
+                            <?php echo $total_cargos; ?>
+                        </dt>
+                        <dd class="text-gray-500 dark:text-gray-400">
+                            Cargos
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+
+            <dd class="text-gray-500 dark:text-gray-400  p-8 text-2xl font-bold">
+                Empleados por departamento
+
+                <!-- Add chart -->
+                <div class="flex flex-col items-center justify-center h-[400px] w-full">
+                    <canvas id="myChart"></canvas>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4  p-4 mx-auto text-gray-900 sm:grid-cols-2 xl:grid-cols-3 dark:text-white sm:p-8">
+                    <?php foreach ($empleados_por_departamento as $departamento => $empleados) { ?>
+                        <div class="flex flex-col items-center justify-start w-full  py-8">
+                            <h2 class="text-lg font-bold"><?php echo $departamento; ?></h2>
+
+                            <div class="h-[400px] overflow-scroll">
+                                <table class="table-auto w-full text-sm  overflow-scroll">
+                                    <thead>
+                                        <tr>
+                                            <th class="px-4 py-2">Nombre completo</th>
+                                            <th class="px-4 py-2">Cargo</th>
+                                            <th class="px-4 py-2">Acciones</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-normal">
+                                        <?php foreach ($empleados as $empleado) { ?>
+                                            <tr>
+                                                <td class="border px-4 py-2">
+                                                    <?php echo $empleado['nombre']; ?>
+                                                    <?php echo $empleado['paterno']; ?>
+                                                    <?php echo $empleado['materno']; ?>
+                                                </td>
+                                                <td class="border px-4 py-2"><?php echo $empleado['cargo']; ?></td>
+                                                <!-- Go to employent details -->
+                                                <td class="border px-4 py-2">
+                                                    <a href="./detalles_empleado.php?empleado_id=<?php echo $empleado['id']; ?>" class="text-blue-600 hover:text-blue-700">Ver</a>
+                                                </td>
+
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    <?php } ?>
+                </div>
+            </dd>
+
+        </div>
+
     </main>
 
     <!-- Pie de Página -->
@@ -86,7 +191,50 @@ $title = "Dashboard";
             <p>&copy; <?php echo date("Y"); ?> SIMAQ - Todos los derechos reservados</p>
         </div>
     </footer>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
 
+            },
+            methods: {
+
+            },
+            created: function() {
+                //Create chart
+                var ctx = document.getElementById('myChart').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: [
+                            <?php foreach ($cantidad_empelados_por_departamento as $item) { ?> '<?php echo $item['nombre']; ?>',
+                            <?php } ?>
+                        ],
+                        datasets: [{
+                            label: 'Cantidad de empleados',
+                            data: [
+                                <?php foreach ($cantidad_empelados_por_departamento as $item) { ?>
+                                    <?php echo $item['cantidad']; ?>,
+                                <?php } ?>
+                            ],
+
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+        });
+    </script>
 </body>
 
 </html>

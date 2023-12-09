@@ -30,6 +30,7 @@ CREATE TABLE empleados (
     cargo_id INT,
     estatus_empleado VARCHAR(50),
     informacion_bancaria_id INT,
+    salario DECIMAL(10, 2) default 0,
     FOREIGN KEY (departamento_id) REFERENCES departamentos(id),
     FOREIGN KEY (cargo_id) REFERENCES cargos(id)
 );
@@ -48,3 +49,16 @@ ALTER TABLE departamentos
 ADD gerente_id INT,
 ADD FOREIGN KEY (gerente_id) REFERENCES empleados(id);
 
+
+
+
+CREATE TABLE nominas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    empleado_id INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    dias_trabajados INT,
+    salario_bruto DECIMAL(10, 2),
+    salario_neto DECIMAL(10, 2),
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id)
+);

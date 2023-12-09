@@ -8,8 +8,15 @@ class Database
     {
         $server = 'db';
         $username = 'root';
-        $password = '';
         $database = 'nomina';
+        $password = '';
+
+
+        /* $server = 'localhost';
+        $username = 'zsdluflx_nomina';
+        $database = 'zsdluflx_nomina';
+        $password = 'BvBCpTaMp'; */
+
         try {
             $this->db = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
         } catch (PDOException $e) {
@@ -75,5 +82,38 @@ class Database
         });
  */
         return $array;
+    }
+
+    function busrcarEmpleado($search_term)
+    {
+
+        $id = $search_term;
+        $search_term = "'%" . $search_term . "%'";
+
+        $results = [];
+
+        if ($this->isNumber($id)) {
+            $sql = "SELECT e.*, c.nombre as cargo FROM empleados e inner join cargos c on e.cargo_id = c.id WHERE e.id = $id";
+            $response = $this->array($sql);
+
+            foreach ($response as $key => $value) {
+                $results[] = $value;
+            }
+        }
+
+        $sql = "SELECT e.*, c.nombre as cargo FROM empleados e inner join cargos c on e.cargo_id = c.id WHERe e.nombre LIKE $search_term OR e.paterno LIKE $search_term OR e.materno LIKE $search_term";
+
+        $response = $this->array($sql);
+
+        foreach ($response as $key => $value) {
+            $results[] = $value;
+        }
+
+        return $results;
+    }
+
+    function isNumber($number)
+    {
+        return is_numeric($number);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-include_once './menu.php';
+include_once './const.php';
 include_once './db.php';
 
 
@@ -93,6 +93,18 @@ $db = new Database();
         </div>
     </footer>
     <script>
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        };
+
+        const formatCurrency = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN',
+            minimumFractionDigits: 0
+        })
+
         const app = new Vue({
             el: '#app',
             data: {

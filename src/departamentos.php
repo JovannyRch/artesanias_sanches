@@ -1,5 +1,5 @@
 <?php
-include_once './menu.php';
+include_once './const.php';
 include_once './db.php';
 
 session_start();

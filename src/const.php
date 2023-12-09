@@ -30,3 +30,9 @@ $menu = [
 
 
 $status = ["Activo", "Licencia", "Vacaciones", "Incapacidad", "Suspendido", "Baja Voluntaria", "Baja Involuntaria", "Jubilado", "Fallecido"];
+
+
+function formatCurrency($value)
+{
+    return "$" . number_format($value, 2, '.', ',');
+}
