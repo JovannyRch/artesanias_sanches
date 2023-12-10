@@ -16,6 +16,13 @@ $db = new Database();
 
 $id = $_GET['id'];
 
+$check = $db->existeNomina($id);
+
+if (!$check) {
+    header("Location: index.php");
+    exit;
+}
+
 $nomina = $db->getCalculoNomina($id);
 
 $datos_empleado = $nomina['empleado'];
@@ -46,6 +53,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
     <script src="./assets/chart.js"></script>
     <script src="./assets/vue.js"></script>
     <script src="./assets/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="./assets/flowbite.css">
 </head>
 
@@ -153,71 +161,94 @@ $deducciones = json_decode($nomina['deducciones'], true);
                             <?php echo $nomina['dias_de_pago'] ?>
                         </div>
 
+                        <?php if ($nomina['horas_extras'] != 0) { ?>
+                            <div>
+                                Horas extras:
+                            </div>
+                            <div>
+                                <?php echo $nomina['horas_extras'] ?>
+                            </div>
+                        <?php } ?>
+
+                        <?php if ($nomina['precio_por_horas_extra'] != 0) { ?>
+                            <div>
+                                Precio por hora extra:
+                            </div>
+                            <div>
+                                <?php echo formatCurrency($nomina['precio_por_horas_extra']) ?>
+                            </div>
+                        <?php } ?>
+
+
                     </div>
                 </div>
 
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-                            Asignaciones
-                        </caption>
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Cocepto
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Cantidad
-                                </th>
+                <?php if (sizeof($asignaciones) != 0) { ?>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                                Percepciones
+                            </caption>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Cocepto
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Cantidad
+                                    </th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($asignaciones as $item) { ?>
-                                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <?php echo $item['concepto']; ?>
-                                    </th>
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <?php echo formatCurrency($item['valor']); ?>
-                                    </th>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($asignaciones as $item) { ?>
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <?php echo $item['concepto']; ?>
+                                        </th>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <?php echo formatCurrency($item['valor']); ?>
+                                        </th>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php } ?>
 
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-5">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                        <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
-                            Deducciones
-                        </caption>
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-6 py-3">
-                                    Cocepto
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Cantidad
-                                </th>
+                <?php if (sizeof($deducciones) != 0) { ?>
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-5 mt-5">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+                                Deducciones
+                            </caption>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Cocepto
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Cantidad
+                                    </th>
 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($deducciones as $item) { ?>
-                                <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <?php echo $item['concepto']; ?>
-                                    </th>
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <?php echo formatCurrency($item['valor']); ?>
-                                    </th>
                                 </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($deducciones as $item) { ?>
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <?php echo $item['concepto']; ?>
+                                        </th>
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            <?php echo formatCurrency($item['valor']); ?>
+                                        </th>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
 
-                </div>
+                    </div>
+                <?php } ?>
 
                 <!-- Deducciones table -->
 
@@ -247,7 +278,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
                                     Percepciones
                                 </div>
                                 <div>
-                                    <?php echo formatCurrency($nomina['total_asignaciones']) ?>
+                                    + <?php echo formatCurrency($nomina['total_asignaciones']) ?>
                                 </div>
                             </div>
                         </div>
@@ -261,11 +292,13 @@ $deducciones = json_decode($nomina['deducciones'], true);
                                     Deducciones
                                 </div>
                                 <div>
-                                    <?php echo formatCurrency($nomina['total_deducciones']) ?>
+                                    - <?php echo formatCurrency($nomina['total_deducciones']) ?>
                                 </div>
                             </div>
                         </div>
                     </li>
+
+                    <hr class="my-5" />
 
                     <li>
                         <div class="flex items-center p-3 text-base font-bold text-blue-600  rounded-lg bg-gray-50  group hover:shadow dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
@@ -285,7 +318,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
             </div>
 
             <div class="flex justify-end mt-5 w-full max-w-lg">
-                <a href="./reporte_nomina.php?id=<?php echo $id ?>" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
+                <a target="_blank" href="./descargar_nomina.php?id=<?php echo $id ?>" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
                     Descargar PDF
                 </a>
             </div>

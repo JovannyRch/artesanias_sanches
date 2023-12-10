@@ -373,11 +373,11 @@ $db = new Database();
                             <hr class="my-5" />
 
                             <!-- Add comentarios text area -->
-                            <div class="flex flex-col gap-4 mt-4">
+                            <!--    <div class="flex flex-col gap-4 mt-4">
                                 <label for="comentarios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comentarios</label>
                                 <textarea v-model="comentarios" name="comentarios" id="comentarios" cols="30" rows="2" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
                             </div>
-
+ -->
 
 
                             <hr class="my-5" />
@@ -437,30 +437,13 @@ $db = new Database();
                 resultados: null,
                 periodoInicio: null,
                 periodoFin: null,
-                empleadoSeleccionado: {
-                    "id": 9,
-                    "nombre": "Jovanny",
-                    "paterno": "Ramirez",
-                    "materno": "Chimal",
-                    "direccion": null,
-                    "telefono": "7226227577",
-                    "email": "jovannyrch@gmail.com",
-                    "rfc": "XEXX010101HNE",
-                    "curp": "XEXX010101HNEXXXA4",
-                    "fecha_ingreso": "2023-12-08",
-                    "departamento_id": 3,
-                    "cargo_id": 1,
-                    "estatus_empleado": "Activo",
-                    "informacion_bancaria_id": null,
-                    "salario": "40000.00",
-                    "cargo": "Ing Software"
-                },
+                empleadoSeleccionado: null,
                 horasExtra: 0,
                 precioPorHorasExtra: 0.0,
                 asignaciones: [],
                 deducciones: [],
-                asignacionConcepto: "BONO PUNTUALIDAD",
-                asignacionValor: 1000,
+                asignacionConcepto: "",
+                asignacionValor: 0.0,
                 asignacionPorcentaje: 0.0,
                 deduccionConcepto: "",
                 deduccionValor: 0.0,

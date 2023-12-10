@@ -162,4 +162,16 @@ class Database
 
         return $nomina;
     }
+
+    function existeNomina($id)
+    {
+        $sql = "SELECT * FROM calculo_nomina WHERE id = $id";
+        $nomina = $this->row($sql);
+
+        if ($nomina) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
