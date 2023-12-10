@@ -174,4 +174,55 @@ class Database
             return false;
         }
     }
+
+    function existeEmpleado($id)
+    {
+        $sql = "SELECT * FROM empleados WHERE id = $id";
+        $empleado = $this->row($sql);
+
+        if ($empleado) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function getEmpleado($id)
+    {
+        $sql = "SELECT 
+        e.*, c.nombre cargo, d.nombre departamento
+        FROM empleados e inner join cargos c on e.cargo_id = c.id 
+        inner join departamentos d on e.departamento_id = d.id
+        WHERE e.id = $id
+
+        ";
+        $empleado = $this->row($sql);
+
+        return $empleado;
+    }
+
+    function getNominas()
+    {
+        $sql = "SELECT * FROM calculo_nomina";
+        $nominas = $this->array($sql);
+
+        foreach ($nominas as $key => $value) {
+            $sql = "SELECT e.*, c.nombre cargo FROM empleados e inner join cargos c on e.cargo_id = c.id WHERE e.id = {$value['empleado_id']} ";
+
+            $empleado = $this->row($sql);
+
+            $nominas[$key]['empleado'] = $empleado;
+        }
+
+        return $nominas;
+    }
+
+    function getNominasPorEmpleado($id)
+    {
+        $sql = "SELECT * FROM calculo_nomina WHERE empleado_id = $id";
+        $nominas = $this->array($sql);
+
+
+        return $nominas;
+    }
 }

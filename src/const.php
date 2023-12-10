@@ -15,17 +15,21 @@ $menu = [
         "url" => "cargos.php"
     ],
     [
-        "title" => "Gestión de Empleados",
+        "title" => "Empleados",
         "url" => "empleados.php"
     ],
     [
-        "title" => "Cálculo de Nómina",
-        "url" => "nomina.php"
+        "title" => "Nóminas",
+        "url" => "nominas.php"
     ],
     [
+        "title" => "Cálculo de Nómina",
+        "url" => "calculo_nomina.php"
+    ],
+    /*   [
         "title" => "Reportes",
         "url" => "reportes.php"
-    ]
+    ] */
 ];
 
 
@@ -35,4 +39,9 @@ $status = ["Activo", "Licencia", "Vacaciones", "Incapacidad", "Suspendido", "Baj
 function formatCurrency($value)
 {
     return "$" . number_format($value, 2, '.', ',');
+}
+
+function formatDate($date)
+{
+    return date("d/m/Y", strtotime($date));
 }

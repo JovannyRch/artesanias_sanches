@@ -167,7 +167,7 @@ foreach ($departamentos as $departamento) {
                                                 <td class="border px-4 py-2"><?php echo $empleado['cargo']; ?></td>
                                                 <!-- Go to employent details -->
                                                 <td class="border px-4 py-2">
-                                                    <a href="./detalles_empleado.php?empleado_id=<?php echo $empleado['id']; ?>" class="text-blue-600 hover:text-blue-700">Ver</a>
+                                                    <a href="./detalles_empleado.php?id=<?php echo $empleado['id']; ?>" class="text-blue-600 hover:text-blue-700">Ver</a>
                                                 </td>
 
                                             </tr>
