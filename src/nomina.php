@@ -135,11 +135,45 @@ $db = new Database();
                 </b>
                 <hr class="my-5" />
 
+                <!-- Periodo form -->
+                <div class="flex flex-col gap-4 mt-4 w-full md:w-1/2">
+                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        Periodo laboral
+                    </h5>
+                    <div class="flex gap-4">
+                        <div class="flex-1">
+                            <label for="periodo-inicio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Periodo inicio</label>
+                            <input v-model="periodoInicio" type="date" name="periodo-inicio" id="periodo-inicio" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                        </div>
+                        <div class="flex-1">
+                            <label for="periodo-fin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Periodo fin</label>
+                            <input v-model="periodoFin" type="date" name="periodo-fin" id="periodo-fin" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                        </div>
+                    </div>
+                    <div class="flex justify-end items-center gap-2 p-4">
+                        <b>
+                            Días de pago:
+                        </b>
+                        <b>
+                            {{diasDePago}}
+                        </b>
+                    </div>
+                </div>
+
+
+                <hr class="my-5" />
+
                 <div class="w-full">
+                    <h5 class="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        Horas extra
+                    </h5>
+
                     <div class="flex gap-4 w-full md:w-1/2">
+
+
                         <!-- Horas extra -->
                         <div class="flex-1">
-                            <label for="horas-extra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Horas extra</label>
+                            <label for="horas-extra" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cantidad de horas extra</label>
                             <input @change="actualizarDatos" v-model="horasExtra" type="number" name="horas-extra" id="horas-extra" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
                         </div>
 
@@ -149,9 +183,9 @@ $db = new Database();
                             <input @change="actualizarDatos" v-model="precioPorHorasExtra" type="number" name="precio-hora" id="precio-hora" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required />
                         </div>
                     </div>
-                    <div class="flex justify-end items-center gap-2 p-4">
+                    <div class="flex justify-end items-center gap-2 p-4 w-full md:w-1/2">
                         <b>
-                            Pago por horas extra:
+                            Pago total por horas extra:
                         </b>
                         <b>
                             {{formatCurrencyFunction(pagoPorHorasExtra)}}
@@ -336,7 +370,17 @@ $db = new Database();
                                     </b>
                                 </div>
                             </div>
+                            <hr class="my-5" />
 
+                            <!-- Add comentarios text area -->
+                            <div class="flex flex-col gap-4 mt-4">
+                                <label for="comentarios" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comentarios</label>
+                                <textarea v-model="comentarios" name="comentarios" id="comentarios" cols="30" rows="2" class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                            </div>
+
+
+
+                            <hr class="my-5" />
 
                             <!-- Show sueldo neto -->
 
@@ -353,7 +397,7 @@ $db = new Database();
 
                                     <div class="flex justify-end mt-5">
 
-                                        <button type="submit" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
+                                        <button type="submit" @click="guardar" class="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
                                             Guardar
                                         </button>
                                     </div>
@@ -391,6 +435,8 @@ $db = new Database();
             data: {
                 search: "",
                 resultados: null,
+                periodoInicio: null,
+                periodoFin: null,
                 empleadoSeleccionado: {
                     "id": 9,
                     "nombre": "Jovanny",
@@ -422,6 +468,7 @@ $db = new Database();
                 totalAsignaciones: 0.0,
                 totalDeducciones: 0.0,
                 salarioNeto: 0.0,
+                comentarios: "",
                 deduccionesPreestablecidas: [{
                         nombre: "ISR",
                         porcentaje: 10.0,
@@ -534,9 +581,54 @@ $db = new Database();
                     this.deduccionConcepto = deduccion.nombre;
                     this.deduccionValor = this.empleadoSeleccionado.salario * (deduccion.porcentaje / 100);
                     this.deduccionPorcentaje = deduccion.porcentaje;
+                },
+                guardar: async function() {
+                    const data = {
+                        empleado_id: this.empleadoSeleccionado.id,
+                        periodo_inicio: this.periodoInicio,
+                        periodo_fin: this.periodoFin,
+                        horas_extras: this.horasExtra,
+                        precio_por_horas_extra: this.precioPorHorasExtra,
+                        asignaciones: this.asignaciones ?? [],
+                        deducciones: this.deducciones ?? [],
+                        total_asignaciones: this.totalAsignaciones,
+                        total_deducciones: this.totalDeducciones,
+                        comentarios: this.comentarios,
+                        salario_neto: this.salarioNeto,
+                        dias_de_pago: this.diasDePago,
+                        salario_bruto: this.empleadoSeleccionado.salario,
+                    };
+
+                    const response = await axios.post(
+                        "/api.php", {
+                            servicio: "guardarNomina",
+                            data,
+                        },
+                        config
+                    )
+
+                    console.log("response", response);
+                    const idNomina = response.data.id;
+
+                    //check if is a number
+                    if (idNomina !== null && !isNaN(idNomina)) {
+                        window.location.href = `/detalles_nomina.php?id=${idNomina}`;
+                    } else {
+                        alert("Ocurrió un error al guardar la nómina");
+                    }
                 }
             },
             created: function() {
+                //Set default values
+                const today = new Date();
+
+                const inicio = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+                const fin = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+                this.periodoInicio = inicio.toISOString().split('T')[0];
+                this.periodoFin = fin.toISOString().split('T')[0];
+
+
 
             },
             computed: {
@@ -548,6 +640,20 @@ $db = new Database();
                 },
                 porcentajeDeduccionAplicado: function() {
                     return (this.deduccionValor / this.empleadoSeleccionado.salario) * 100;
+                },
+                diasDePago: function() {
+                    if (this.periodoInicio === null || this.periodoFin === null) {
+                        return 0;
+                    }
+
+                    // To calculate the time difference of two dates from period inputs
+                    const inicioDate = new Date(this.periodoInicio);
+                    const finDate = new Date(this.periodoFin);
+
+                    const diffTime = Math.abs(finDate - inicioDate);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    return diffDays;
                 },
             },
 

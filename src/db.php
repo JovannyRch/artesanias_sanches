@@ -112,8 +112,54 @@ class Database
         return $results;
     }
 
+    function guardarNomina($data)
+    {
+
+
+        $asignaciones = isset($data['asignaciones']) ? json_encode($data['asignaciones']) :  '[]';
+        $deducciones = isset($data['deducciones']) ? json_encode($data['deducciones']) :  '[]';
+
+
+        $sql = "INSERT INTO calculo_nomina (empleado_id, periodo_inicio, periodo_fin, horas_extras, precio_por_horas_extra, asignaciones, deducciones, total_asignaciones, total_deducciones, comentarios, salario_neto, dias_de_pago, salario_bruto) VALUES (
+            {$data['empleado_id']},
+            '{$data['periodo_inicio']}',
+            '{$data['periodo_fin']}',
+            {$data['horas_extras']},
+            {$data['precio_por_horas_extra']},
+            '$asignaciones',
+            '$deducciones',
+            {$data['total_asignaciones']},
+            {$data['total_deducciones']},
+            '{$data['comentarios']}',
+            {$data['salario_neto']},
+            {$data['dias_de_pago']},
+            {$data['salario_bruto']}
+        )";
+
+        $this->query($sql);
+
+        $las_id = $this->lastId();
+
+        return $las_id;
+    }
+
     function isNumber($number)
     {
         return is_numeric($number);
+    }
+
+
+    function getCalculoNomina($id)
+    {
+        $sql = "SELECT * FROM calculo_nomina WHERE id = $id";
+        $nomina = $this->row($sql);
+
+        $sql = "SELECT e.*, c.nombre cargo FROM empleados e inner join cargos c on e.cargo_id = c.id WHERE e.id = {$nomina['empleado_id']} ";
+
+        $empleado = $this->row($sql);
+
+        $nomina['empleado'] = $empleado;
+
+        return $nomina;
     }
 }

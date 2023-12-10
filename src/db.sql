@@ -62,3 +62,24 @@ CREATE TABLE nominas (
     salario_neto DECIMAL(10, 2),
     FOREIGN KEY (empleado_id) REFERENCES empleados(id)
 );
+
+
+
+CREATE TABLE calculo_nomina (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    empleado_id INT,
+    periodo_inicio DATE,
+    periodo_fin DATE,
+    horas_extras DECIMAL(10, 2),
+    precio_por_horas_extra DECIMAL(10, 2),
+    asignaciones TEXT,
+    deducciones TEXT,
+    total_asignaciones DECIMAL(10, 2),
+    total_deducciones DECIMAL(10, 2),
+    comentarios TEXT,
+    salario_neto DECIMAL(10, 2),
+    dias_de_pago INT,
+    salario_bruto DECIMAL(10, 2),
+    fecha_procesamiento DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id)
+);
