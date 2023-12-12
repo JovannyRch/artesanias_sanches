@@ -6,16 +6,16 @@ class Database
 
     function __construct()
     {
-        /* $server = 'db';
+        $server = 'db';
         $username = 'root';
         $database = 'nomina';
-        $password = ''; */
+        $password = '';
 
 
-        $server = 'localhost';
+        /* $server = 'localhost';
         $username = 'zsdluflx_nomina';
         $database = 'zsdluflx_nomina';
-        $password = 'BvBCpTaMp';
+        $password = 'BvBCpTaMp'; */
 
         try {
             $this->db = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
