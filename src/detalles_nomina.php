@@ -39,6 +39,18 @@ $asignaciones = json_decode($nomina['asignaciones'], true);
 $deducciones = json_decode($nomina['deducciones'], true);
 
 
+//If has horas_extra add to asignaciones
+
+if ($nomina['horas_extras'] != 0) {
+    $asignaciones[] = [
+        "concepto" => "Horas extras",
+        "valor" => $nomina['horas_extras'] * $nomina['precio_por_horas_extra']
+    ];
+
+    $nomina['total_asignaciones'] += $nomina['horas_extras'] * $nomina['precio_por_horas_extra'];
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -53,7 +65,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
     <script src="./assets/chart.js"></script>
     <script src="./assets/vue.js"></script>
     <script src="./assets/axios.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="./assets/sweetalert2.js"></script>
     <link rel="stylesheet" href="./assets/flowbite.css">
 </head>
 
@@ -116,7 +128,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
 
             <div class="w-full max-w-lg p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700 mt-5">
                 <h5 class="mb-3 text-base font-semibold text-gray-900 md:text-xl dark:text-white">
-                    <?php echo $datos_empleado['id'] ?> - <?php echo $empleado ?>
+                    <a class="text-blue-600 underline underline-offset-1" href="./detalles_empleado.php?id=<?php echo $datos_empleado['id'] ?>"> <?php echo $empleado ?> </a>
                 </h5>
                 <div class="text-sm font-normal text-gray-700 dark:text-gray-400">
                     <div class="grid grid-cols-2">
@@ -192,7 +204,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        Cocepto
+                                        Concepto
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Cantidad
@@ -225,7 +237,7 @@ $deducciones = json_decode($nomina['deducciones'], true);
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                 <tr>
                                     <th scope="col" class="px-6 py-3">
-                                        Cocepto
+                                        Concepto
                                     </th>
                                     <th scope="col" class="px-6 py-3">
                                         Cantidad
@@ -317,7 +329,16 @@ $deducciones = json_decode($nomina['deducciones'], true);
                 </ul>
             </div>
 
-            <div class="flex justify-end mt-5 w-full max-w-lg">
+            <div class="flex justify-end mt-5 w-full max-w-lg gap-4">
+
+                <!-- Delete button -->
+                <form id="delete_form" action="./eliminar_nomina.php" method="POST">
+                    <input type="hidden" name="id" value="<?php echo $id ?>">
+                    <button type="button" @click="confirmarEliminacion" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500">
+                        Eliminar
+                    </button>
+                </form>
+
                 <a target="_blank" href="./descargar_nomina.php?id=<?php echo $id ?>" class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
                     Descargar PDF
                 </a>
@@ -350,7 +371,38 @@ $deducciones = json_decode($nomina['deducciones'], true);
 
             },
             methods: {
-
+                confirmarEliminacion: function() {
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "Esta acción no se puede revertir",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const id = document.querySelector("#delete_form input[name='id']").value;
+                            axios.post("./api.php", {
+                                    servicio: "eliminar_nomina",
+                                    id: id
+                                }, config)
+                                .then(function(response) {
+                                    Swal.fire(
+                                        'Eliminado',
+                                        'La nómina ha sido eliminada',
+                                        'success'
+                                    ).then((result) => {
+                                        window.location.href = "./nominas.php";
+                                    })
+                                })
+                                .catch(function(error) {
+                                    console.log(error);
+                                });
+                        }
+                    })
+                }
             },
             created: function() {
 

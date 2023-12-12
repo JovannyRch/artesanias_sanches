@@ -6,16 +6,16 @@ class Database
 
     function __construct()
     {
-        $server = 'db';
+        /* $server = 'db';
         $username = 'root';
         $database = 'nomina';
-        $password = '';
+        $password = ''; */
 
 
-        /* $server = 'localhost';
+        $server = 'localhost';
         $username = 'zsdluflx_nomina';
         $database = 'zsdluflx_nomina';
-        $password = 'BvBCpTaMp'; */
+        $password = 'BvBCpTaMp';
 
         try {
             $this->db = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
@@ -203,7 +203,7 @@ class Database
 
     function getNominas()
     {
-        $sql = "SELECT * FROM calculo_nomina";
+        $sql = "SELECT * FROM calculo_nomina ORDER BY fecha_procesamiento DESC";
         $nominas = $this->array($sql);
 
         foreach ($nominas as $key => $value) {
@@ -224,5 +224,11 @@ class Database
 
 
         return $nominas;
+    }
+
+    function eliminarNomina($id)
+    {
+        $sql = "DELETE FROM calculo_nomina WHERE id = $id";
+        $this->query($sql);
     }
 }

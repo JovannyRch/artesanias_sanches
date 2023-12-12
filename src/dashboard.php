@@ -28,6 +28,73 @@ foreach ($departamentos as $departamento) {
 }
 
 
+$ultima_nomina = $db->row("SELECT * FROM calculo_nomina
+ INNER JOIN empleados ON calculo_nomina.empleado_id = empleados.id
+ ORDER BY empleados.id DESC LIMIT 1");
+
+
+
+// Cantidad de nominas creadas en el mes actual
+$mes_actual = date("m");
+$anio_actual = date("Y");
+$cantidad_nominas_mes_actual = $db->row("SELECT COUNT(*) total FROM calculo_nomina WHERE MONTH(fecha_procesamiento) = $mes_actual AND YEAR(fecha_procesamiento) = $anio_actual");
+
+if (!$cantidad_nominas_mes_actual) {
+    $cantidad_nominas_mes_actual = 0;
+} else {
+    $cantidad_nominas_mes_actual = $cantidad_nominas_mes_actual['total'];
+}
+
+$sueldos_totales_mes_actual = $db->row("SELECT SUM(salario_neto) total FROM calculo_nomina WHERE MONTH(fecha_procesamiento) = $mes_actual AND YEAR(fecha_procesamiento) = $anio_actual");
+
+if (!$sueldos_totales_mes_actual) {
+    $sueldos_totales_mes_actual = 0;
+} else {
+    $sueldos_totales_mes_actual = $sueldos_totales_mes_actual['total'];
+}
+
+
+$sueldos_totales_mes_anterior = $db->row("SELECT SUM(salario_neto) total FROM calculo_nomina WHERE MONTH(fecha_procesamiento) = $mes_actual - 1 AND YEAR(fecha_procesamiento) = $anio_actual");
+
+if (!$sueldos_totales_mes_anterior) {
+    $sueldos_totales_mes_anterior = 0;
+} else {
+    $sueldos_totales_mes_anterior = $sueldos_totales_mes_anterior['total'];
+}
+
+$show_quick_menu = false;
+
+
+if ($ultima_nomina) {
+    $show_quick_menu = true;
+}
+
+
+$meses = array();
+for ($i = 0; $i < 12; $i++) {
+    $mes = date("m", strtotime("-$i month"));
+    $anio = date("Y", strtotime("-$i month"));
+    $meses[] = date("F Y", strtotime("-$i month"));
+}
+
+
+$nomina_pagada_por_mes = array();
+
+foreach ($meses as $mes) {
+    $mes_actual = date("m", strtotime($mes));
+    $anio_actual = date("Y", strtotime($mes));
+    $total =  $db->row("SELECT SUM(salario_neto) total FROM calculo_nomina WHERE MONTH(fecha_procesamiento) = $mes_actual AND YEAR(fecha_procesamiento) = $anio_actual");
+
+    if (!$total) {
+        $total = 0;
+    } else {
+        $total = $total['total'];
+    }
+    $nomina_pagada_por_mes[$mes] = $total;
+}
+
+$nomina_pagada_por_mes = array_reverse($nomina_pagada_por_mes);
+
 
 ?>
 <!DOCTYPE html>
@@ -98,40 +165,135 @@ foreach ($departamentos as $departamento) {
             <?php echo $title ?>
         </h1>
 
+        <?php if ($show_quick_menu) { ?>
+
+            <div class="grid md:grid-cols-2 sm:grid-cols-1 gap-2">
+                <a href="./detalles_nomina.php?id=<?php echo $ultima_nomina['id']; ?>" class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-5">
+
+                    <div class="flex flex-col space-between h-full">
+                        <div class="flex-1">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                Última nómina creada
+                            </h5>
+                            <p class="font-normal text-gray-700 dark:text-gray-400">
+                                <?php echo $ultima_nomina['nombre']; ?>
+                                <?php echo $ultima_nomina['paterno']; ?>
+                                <?php echo $ultima_nomina['materno']; ?>
+                            </p>
+
+                            <!-- Cantidad pagada -->
+                            <p class="font-normal text-gray-700 dark:text-gray-400">
+                                Sueldo neto: <?php echo formatCurrency($ultima_nomina['salario_neto']); ?>
+                            </p>
+
+                        </div>
+                        <div class="text-blue-600 hover:text-blue-700 mt-4">Ver detalles</div>
+                    </div>
+
+                </a>
+
+                <a href="./calculo_nomina.php" class="block w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 mb-5">
+
+                    <div class="flex flex-col space-between h-full">
+                        <div class="flex-1">
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                Nuevo cálculo de nómina
+                            </h5>
+
+
+
+
+                        </div>
+                        <div class="text-blue-600 hover:text-blue-700 mt-4">
+                            Ir al formulario
+                        </div>
+                    </div>
+
+                </a>
+
+
+
+            </div>
+        <?php } ?>
+
+        <div class="mb-4 p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+            <dl class="grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-3 dark:text-white sm:p-8">
+
+
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo $cantidad_nominas_mes_actual; ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Nóminas generadas este mes
+                    </dd>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo formatCurrency($sueldos_totales_mes_actual); ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Sueldos pagados este mes
+                    </dd>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo formatCurrency($sueldos_totales_mes_anterior); ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Sueldos pagados mes anterior
+                    </dd>
+                </div>
+
+
+
+
+
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo $total_empleados; ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Empleados
+                    </dd>
+                </div>
+
+
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo $total_departamentos; ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Departamentos
+                    </dd>
+                </div>
+
+                <div class="flex flex-col items-center justify-center">
+                    <dt class="mb-2 text-3xl font-extrabold">
+                        <?php echo $total_cargos; ?>
+                    </dt>
+                    <dd class="text-gray-500 dark:text-gray-400">
+                        Cargos
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mb-4">
+
+
+            <dd class="text-gray-500 dark:text-gray-400  p-8 text-2xl font-bold">
+                Nóminas pagadas por mes
+
+                <div class="flex flex-col items-center justify-center h-[400px] w-full">
+                    <canvas id="nominasPorMes"></canvas>
+                </div>
+            </dd>
+        </div>
+
 
         <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
-            <div class=" p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-                <dl class="grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-3 dark:text-white sm:p-8">
-                    <div class="flex flex-col items-center justify-center">
-                        <dt class="mb-2 text-3xl font-extrabold">
-                            <?php echo $total_empleados; ?>
-                        </dt>
-                        <dd class="text-gray-500 dark:text-gray-400">
-                            Empleados
-                        </dd>
-                    </div>
-
-
-                    <div class="flex flex-col items-center justify-center">
-                        <dt class="mb-2 text-3xl font-extrabold">
-                            <?php echo $total_departamentos; ?>
-                        </dt>
-                        <dd class="text-gray-500 dark:text-gray-400">
-                            Departamentos
-                        </dd>
-                    </div>
-
-                    <div class="flex flex-col items-center justify-center">
-                        <dt class="mb-2 text-3xl font-extrabold">
-                            <?php echo $total_cargos; ?>
-                        </dt>
-                        <dd class="text-gray-500 dark:text-gray-400">
-                            Cargos
-                        </dd>
-                    </div>
-                </dl>
-            </div>
 
             <dd class="text-gray-500 dark:text-gray-400  p-8 text-2xl font-bold">
                 Empleados por departamento
@@ -140,47 +302,48 @@ foreach ($departamentos as $departamento) {
                 <div class="flex flex-col items-center justify-center h-[400px] w-full">
                     <canvas id="myChart"></canvas>
                 </div>
+            </dd>
+        </div>
 
-                <div class="grid grid-cols-1 gap-4  p-4 mx-auto text-gray-900 sm:grid-cols-2 xl:grid-cols-3 dark:text-white sm:p-8">
-                    <?php foreach ($empleados_por_departamento as $departamento => $empleados) { ?>
-                        <div class="flex flex-col items-center justify-start w-full  py-8">
-                            <h2 class="text-lg font-bold"><?php echo $departamento; ?></h2>
+        <div class="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mt-4">
+            <div class="grid grid-cols-1 gap-4  p-4 mx-auto text-gray-900 sm:grid-cols-2 xl:grid-cols-3 dark:text-white sm:p-8">
+                <?php foreach ($empleados_por_departamento as $departamento => $empleados) { ?>
+                    <div class="flex flex-col items-center justify-start w-full  py-8">
+                        <h2 class="text-lg font-bold"><?php echo $departamento; ?></h2>
 
-                            <div class="h-[400px] overflow-scroll">
-                                <table class="table-auto w-full text-sm  overflow-scroll">
-                                    <thead>
+                        <div class="h-[400px] overflow-scroll">
+                            <table class="table-auto w-full text-sm  overflow-scroll">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-2">Nombre completo</th>
+                                        <th class="px-4 py-2">Cargo</th>
+                                        <th class="px-4 py-2">Acciones</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody class="font-normal">
+                                    <?php foreach ($empleados as $empleado) { ?>
                                         <tr>
-                                            <th class="px-4 py-2">Nombre completo</th>
-                                            <th class="px-4 py-2">Cargo</th>
-                                            <th class="px-4 py-2">Acciones</th>
+                                            <td class="border px-4 py-2">
+                                                <?php echo $empleado['nombre']; ?>
+                                                <?php echo $empleado['paterno']; ?>
+                                                <?php echo $empleado['materno']; ?>
+                                            </td>
+                                            <td class="border px-4 py-2"><?php echo $empleado['cargo']; ?></td>
+                                            <!-- Go to employent details -->
+                                            <td class="border px-4 py-2">
+                                                <a href="./detalles_empleado.php?id=<?php echo $empleado['id']; ?>" class="text-blue-600 hover:text-blue-700">Ver</a>
+                                            </td>
 
                                         </tr>
-                                    </thead>
-                                    <tbody class="font-normal">
-                                        <?php foreach ($empleados as $empleado) { ?>
-                                            <tr>
-                                                <td class="border px-4 py-2">
-                                                    <?php echo $empleado['nombre']; ?>
-                                                    <?php echo $empleado['paterno']; ?>
-                                                    <?php echo $empleado['materno']; ?>
-                                                </td>
-                                                <td class="border px-4 py-2"><?php echo $empleado['cargo']; ?></td>
-                                                <!-- Go to employent details -->
-                                                <td class="border px-4 py-2">
-                                                    <a href="./detalles_empleado.php?id=<?php echo $empleado['id']; ?>" class="text-blue-600 hover:text-blue-700">Ver</a>
-                                                </td>
-
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
-                    <?php } ?>
-                </div>
-            </dd>
 
+                    </div>
+                <?php } ?>
+            </div>
         </div>
 
     </main>
@@ -201,7 +364,6 @@ foreach ($departamentos as $departamento) {
 
             },
             created: function() {
-                //Create chart
                 var ctx = document.getElementById('myChart').getContext('2d');
                 var myChart = new Chart(ctx, {
                     type: 'bar',
@@ -215,6 +377,38 @@ foreach ($departamentos as $departamento) {
                             data: [
                                 <?php foreach ($cantidad_empelados_por_departamento as $item) { ?>
                                     <?php echo $item['cantidad']; ?>,
+                                <?php } ?>
+                            ],
+
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+
+                //Create nominas chart
+                var ctx = document.getElementById('nominasPorMes').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: [
+                            <?php foreach ($nomina_pagada_por_mes as $mes => $total) { ?> '<?php echo $mes; ?>',
+                            <?php } ?>
+                        ],
+                        datasets: [{
+                            label: 'Nóminas pagadas',
+                            data: [
+                                <?php foreach ($nomina_pagada_por_mes as $mes => $total) { ?>
+                                    <?php echo is_numeric($total) ? $total : 0.0; ?>,
                                 <?php } ?>
                             ],
 

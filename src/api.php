@@ -25,6 +25,12 @@ switch ($servicio) {
         $respuesta = $db->guardarNomina($data);
         responder($respuesta);
         break;
+
+    case 'eliminar_nomina':
+        $id = $_POST['id'];
+        $respuesta = $db->eliminarNomina($id);
+        responder($respuesta);
+        break;
     default:
         echo json_encode(array('success' => 0, 'error' => 'Servicio no encontrado:' . $servicio));
         break;

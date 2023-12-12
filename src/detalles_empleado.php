@@ -100,14 +100,24 @@ $total = count($nominas);
             <?php echo $title ?>
         </h1>
         <br />
-        <h1 class="inline-block mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-8">
-            <?php echo $nombre_completo; ?>
-        </h1>
+        <div class="flex justify-between">
+            <h1 class="inline-block mb-2 text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-8">
+                <?php echo $nombre_completo; ?>
+            </h1>
+            <!-- Edit button -->
+            <div>
+                <a href="./formulario_empleado.php?id=<?php echo $id; ?>" class="inline-block mb-2 text-md font-extrabold tracking-tight text-gray-900 dark:text-white mb-8">
+                    <button class="bg-blue-600 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ml-1 sm:ml-3 text-white">
+                        Editar
+                    </button>
+                </a>
+            </div>
+        </div>
 
         <!-- Add details -->
 
         <!-- Cargo -->
-        <div class="flex flex-col md:flex-row">
+        <div class=" flex flex-col md:flex-row">
             <div class="flex flex-col w-full md:w-1/2">
                 <label for="cargo" class="text-gray-700 dark:text-gray-200">Cargo</label>
                 <input type="text" id="cargo" name="cargo" value="<?php echo $empleado['cargo']; ?>" disabled class="w-full px-4 py-2 mt-2 text-base text-gray-700 bg-white border border-gray-300 rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring">

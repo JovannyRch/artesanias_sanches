@@ -1,7 +1,18 @@
+/* 
 drop database if exists nomina;
-create database nomina;
 
-use nomina;
+
+create database nomina;
+ */
+/* use nomina; */
+
+drop table if exists cargos;
+drop table if exists departamentos;
+drop table if exists empleados;
+drop table if exists informacion_bancaria;
+drop table if exists nominas;
+drop table if exists calculo_nomina;
+
 
 CREATE TABLE cargos (
     id INT AUTO_INCREMENT PRIMARY KEY,
