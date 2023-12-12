@@ -73,6 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </title>
     <script src="./assets//tailwind.js"></script>
     <script src="./assets/chart.js"></script>
+    <script src="./assets/sweetalert2.js"></script>
+    <script src="./assets/axios.js"></script>
 </head>
 
 <body class="bg-gray-100 flex flex-col min-h-screen dark:bg-gray-900 antialiased">
@@ -147,9 +149,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['error']);
             } ?>
 
-            <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Guardar
-            </button>
+            <div class="flex gap-4">
+                <button type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Guardar
+                </button>
+                <?php if ($is_edit) { ?>
+                    <button type="button" onclick="confirmarEliminacion()" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        Eliminar
+                    </button>
+                <?php } ?>
+            </div>
         </form>
     </main>
 
@@ -159,7 +168,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>&copy; <?php echo date("Y"); ?> SIMAQ - Todos los derechos reservados</p>
         </div>
     </footer>
+    <script>
+        const config = {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        };
 
+        function confirmarEliminacion() {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#ef4444',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const id = <?php echo $id ?>;
+                    axios.post('./api.php', {
+                            servicio: "eliminar_cargo",
+                            id: id
+                        }, config)
+                        .then(function(response) {
+                            Swal.fire(
+                                'Eliminado!',
+                                'El cargo ha sido eliminado.',
+                                'success'
+                            ).then((result) => {
+                                window.location.href = "./cargos.php";
+                            })
+                        })
+                        .catch(function(error) {
+                            Swal.fire(
+                                'Error!',
+                                'El cargo no ha sido eliminado.',
+                                'error'
+                            )
+                        });
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

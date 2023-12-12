@@ -42,37 +42,15 @@ CREATE TABLE empleados (
     estatus_empleado VARCHAR(50),
     informacion_bancaria_id INT,
     salario DECIMAL(10, 2) default 0,
-    FOREIGN KEY (departamento_id) REFERENCES departamentos(id),
-    FOREIGN KEY (cargo_id) REFERENCES cargos(id)
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(id) on delete set null,
+    FOREIGN KEY (cargo_id) REFERENCES cargos(id) on delete set null,
 );
 
-CREATE TABLE informacion_bancaria (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    empleado_id INT NOT NULL,
-    banco VARCHAR(100),
-    numero_cuenta VARCHAR(100),
-    tipo_cuenta VARCHAR(50),
-    FOREIGN KEY (empleado_id) REFERENCES empleados(id)
-);
 
 
 ALTER TABLE departamentos
 ADD gerente_id INT,
 ADD FOREIGN KEY (gerente_id) REFERENCES empleados(id);
-
-
-
-
-CREATE TABLE nominas (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    empleado_id INT NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_fin DATE NOT NULL,
-    dias_trabajados INT,
-    salario_bruto DECIMAL(10, 2),
-    salario_neto DECIMAL(10, 2),
-    FOREIGN KEY (empleado_id) REFERENCES empleados(id)
-);
 
 
 
@@ -92,5 +70,5 @@ CREATE TABLE calculo_nomina (
     dias_de_pago INT,
     salario_bruto DECIMAL(10, 2),
     fecha_procesamiento DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (empleado_id) REFERENCES empleados(id)
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id) on delete cascade
 );

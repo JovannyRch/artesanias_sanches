@@ -31,6 +31,22 @@ switch ($servicio) {
         $respuesta = $db->eliminarNomina($id);
         responder($respuesta);
         break;
+
+    case 'eliminar_cargo':
+        $id = $_POST['id'];
+        $respuesta = $db->eliminarCargo($id);
+        responder($respuesta);
+        break;
+    case 'eliminar_departamento':
+        $id = $_POST['id'];
+        $respuesta = $db->eliminarDepartamento($id);
+        responder($respuesta);
+        break;
+    case 'eliminar_empleado':
+        $id = $_POST['id'];
+        $respuesta = $db->eliminarEmpleado($id);
+        responder($respuesta);
+        break;
     default:
         echo json_encode(array('success' => 0, 'error' => 'Servicio no encontrado:' . $servicio));
         break;

@@ -231,4 +231,22 @@ class Database
         $sql = "DELETE FROM calculo_nomina WHERE id = $id";
         $this->query($sql);
     }
+
+    function eliminarCargo($id)
+    {
+        $sql = "DELETE FROM cargos WHERE id = $id";
+        $this->query($sql);
+    }
+
+    function eliminarDepartamento($id)
+    {
+        $sql = "DELETE FROM departamentos WHERE id = $id";
+        $this->query($sql);
+    }
+
+    function eliminarEmpleado($id)
+    {
+        $sql = "DELETE FROM empleados WHERE id = $id";
+        $this->query($sql);
+    }
 }
