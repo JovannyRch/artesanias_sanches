@@ -6,11 +6,9 @@ create database nomina;
  */
 /* use nomina; */
 
+drop table if exists empleados;
 drop table if exists cargos;
 drop table if exists departamentos;
-drop table if exists empleados;
-drop table if exists informacion_bancaria;
-drop table if exists nominas;
 drop table if exists calculo_nomina;
 
 
@@ -43,7 +41,7 @@ CREATE TABLE empleados (
     informacion_bancaria_id INT,
     salario DECIMAL(10, 2) default 0,
     FOREIGN KEY (departamento_id) REFERENCES departamentos(id) on delete set null,
-    FOREIGN KEY (cargo_id) REFERENCES cargos(id) on delete set null,
+    FOREIGN KEY (cargo_id) REFERENCES cargos(id) on delete set null
 );
 
 
@@ -72,3 +70,21 @@ CREATE TABLE calculo_nomina (
     fecha_procesamiento DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (empleado_id) REFERENCES empleados(id) on delete cascade
 );
+
+
+create table peliculas (
+    id int auto_increment primary key,
+    nombre varchar(100) not null,
+    genero varchar(50),
+    descripcion text,
+    duracion int,
+    clasificacion varchar(50)
+);
+
+create table productos(
+    id int auto_increment primary key,
+    nombre_equipo varchar(100) not null,
+    n_serie varchar(100),
+    estado_general varchar(100),
+    lista_de_defectos varchar(100)
+); 
