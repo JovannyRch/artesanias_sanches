@@ -1,4 +1,26 @@
-<?php session_start(); ?>
+<?php
+session_start();
+
+if (!isset($_SESSION['idUsuario'])) {
+    header('Location: iniciar_sesion.php');
+    exit;
+}
+
+if ($_SESSION['tipoUsuario'] !== 'PDC') {
+    header('Location: consultar_pagos.php');
+    exit;
+}
+
+$pdo = new PDO("mysql:host=db;dbname=pagos_escolares;charset=utf8;", 'root', '');
+//$pdo = new PDO("mysql:host=localhost;dbname=auogesej_pagos;charset=utf8;", 'auogesej_pagos', 'DfCU4azC6');
+
+$stm = $pdo->prepare("SELECT * FROM PAGOS WHERE FolioPago = ?");
+$stm->execute([$_GET['folio']]);
+$pago = $stm->fetch(PDO::FETCH_ASSOC);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -15,9 +37,11 @@
 
         .container {
             display: flex;
+            width: 100%;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding: 20px;
             margin-top: 12px;
         }
 
@@ -53,6 +77,14 @@
             height: auto;
             margin-top: 20px;
         }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -78,12 +110,35 @@
     <header>
         <h1>Instituto México</h1>
     </header>
-
     <div class="container">
+
         <div style="max-width: 10%">
             <img src="https://edutory.mx/wp-content/uploads/2023/02/instituto-mexico-secundaria-ims-logo-1006x1024.png" />
         </div>
-        <p>Bienvenido al Instituto México, un lugar de excelencia académica y desarrollo integral para nuestros estudiantes. Aquí, ofrecemos una educación de calidad con valores, enfocándonos en el crecimiento personal y profesional de nuestra comunidad estudiantil.</p>
+        <p>
+            Editar pago
+        </p>
+
+        <form action="actualizar_pago.php?folio=<?php echo $pago['FolioPago']; ?>" method="post">
+            <label for="folio">Folio:</label>
+            <input type="text" name="folio" value="<?php echo $pago['FolioPago']; ?>">
+            <br>
+            <label for="concepto">Concepto:</label>
+            <input type="text" name="concepto" id="concepto" value="<?php echo $pago['Concepto']; ?>" required>
+            <br>
+            <label for="mes">Mes:</label>
+            <input type="text" name="mes" id="mes" value="<?php echo $pago['MesPagado']; ?>" required>
+            <br>
+            <label for="fecha">Fecha:</label>
+            <input type="date" name="fecha" id="fecha" value="<?php echo $pago['FechaPago']; ?>" required>
+            <br>
+            <label for="monto">Monto:</label>
+            <input type="number" name="monto" id="monto" value="<?php echo $pago['Monto']; ?>" required>
+            <br>
+
+            <br>
+            <input type="submit" value="Actualizar">
+        </form>
     </div>
 </body>
 

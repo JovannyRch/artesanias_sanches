@@ -1,4 +1,36 @@
-<?php session_start(); ?>
+<?php
+session_start();
+require_once 'db.php';
+
+$db = new Database();
+
+$idUsuario = $_POST['idUsuario'];
+$password = $_POST['password'];
+
+$sql = "SELECT IDUsuario, Nombre, ApellidoPaterno, ApellidoMaterno, TipoUsuario, Password FROM USUARIOS 
+WHERE IDUsuario = '$idUsuario' AND Password = '$password'";
+
+$db->query($sql);
+
+$sql = "SELECT * FROM USUARIOS WHERE IDUsuario = '$idUsuario'";
+$result = $db->array($sql);
+
+$user = null;
+
+if (sizeof($result) > 0) {
+    $user = $result[0];
+    $_SESSION['idUsuario'] = $user['IDUsuario'];
+    $_SESSION['usuario'] = $user['Nombre'] . " " . $user['ApellidoPaterno'] . " " . $user['ApellidoMaterno'];
+    $_SESSION['tipoUsuario'] = $user['TipoUsuario'];
+} else {
+    echo "Usuario no registrado.";
+    die();
+}
+
+$db->close();
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -78,12 +110,14 @@
     <header>
         <h1>Instituto México</h1>
     </header>
-
+    <div style="max-width: 10%">
+        <img src="https://edutory.mx/wp-content/uploads/2023/02/instituto-mexico-secundaria-ims-logo-1006x1024.png" />
+    </div>
     <div class="container">
-        <div style="max-width: 10%">
-            <img src="https://edutory.mx/wp-content/uploads/2023/02/instituto-mexico-secundaria-ims-logo-1006x1024.png" />
-        </div>
-        <p>Bienvenido al Instituto México, un lugar de excelencia académica y desarrollo integral para nuestros estudiantes. Aquí, ofrecemos una educación de calidad con valores, enfocándonos en el crecimiento personal y profesional de nuestra comunidad estudiantil.</p>
+        <h1>Bienvenido <?php echo $_SESSION['usuario'] ?></h1>
+        <p>Usted ha iniciado sesión como <?php echo $_SESSION['tipoUsuario'] ?></p>
+
+
     </div>
 </body>
 
