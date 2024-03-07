@@ -15,8 +15,8 @@ class Database
         /* $server = 'localhost';
         $username = 'auogesej_pagos';
         $password = 'DfCU4azC6';
-        $database = 'auogesej_pagos';
- */
+        $database = 'auogesej_pagos'; */
+
         try {
             $this->db = new PDO("mysql:host=$server;dbname=$database;charset=utf8;", $username, $password);
         } catch (PDOException $e) {

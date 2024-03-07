@@ -1,5 +1,6 @@
 <?php
 
+require_once 'db.php';
 session_start();
 
 
@@ -13,15 +14,12 @@ if ($_SESSION['tipoUsuario'] !== 'PDC') {
     exit;
 }
 
-$pdo = new PDO("mysql:host=db;dbname=pagos_escolares;charset=utf8;", 'root', '');
-//$pdo = new PDO("mysql:host=localhost;dbname=auogesej_pagos;charset=utf8;", 'auogesej_pagos', 'DfCU4azC6');
+$db = new Database();
+
 $folio = $_GET['folio'];
 $sql = "DELETE FROM PAGOS WHERE FolioPago = '$folio'";
 
-$stm = $pdo->prepare($sql);
-$stm->execute();
-
-$pdo = null;
+$db->query($sql);
 
 
 header('Location: consultar_pagos_pdc.php');

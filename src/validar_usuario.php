@@ -37,6 +37,7 @@ $db->close();
 <head>
     <meta charset="UTF-8">
     <title>Instituto México - Inicio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -57,68 +58,86 @@ $db->close();
             max-width: 80vw;
         }
 
-        nav {
-            background-color: #004d99;
-            color: white;
-            padding: 10px 0;
-        }
-
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
         img {
             max-width: 100%;
             height: auto;
             margin-top: 20px;
+        }
+
+        .container {
+            min-height: 100vh;
+            padding-top: 100px;
+            gap: 8px;
         }
     </style>
 </head>
 
 <body>
 
-    <nav>
-        <ul>
-            <li><a href="index.php">Inicio</a></li>
-            <?php if (isset($_SESSION['tipoUsuario'])) : ?>
-                <?php if ($_SESSION['tipoUsuario'] == 'PDC') : ?>
-                    <li><a href="consultar_pagos.php">Consultar pagos</a></li>
-                    <li><a href="registrar_pagos.php">Registrar pagos</a></li>
-                <?php elseif ($_SESSION['tipoUsuario'] == 'PF') : ?>
-                    <li><a href="consultar_pagos.php">Consultar pagos</a></li>
-                <?php endif; ?>
-                <li><a href="logout.php">Salir</a></li>
-            <?php else : ?>
-                <li><a href="registrarse.php">Registrarse</a></li>
-                <li><a href="iniciar_sesion.php">Iniciar sesión</a></li>
-            <?php endif; ?>
-        </ul>
+
+
+    <nav class="navbar fixed-top navbar-expand-lg bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="index.php">Instituto Mexicano</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
+                    </svg>
+
+                </span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-white">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="index.php">Inicio</a>
+                    </li>
+                    <?php if (isset($_SESSION['tipoUsuario'])) : ?>
+                        <?php if ($_SESSION['tipoUsuario'] == 'PDC') : ?>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="consultar_pagos.php">Consultar pagos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="registrar_pagos.php">Registrar pagos</a>
+                            </li>
+                        <?php elseif ($_SESSION['tipoUsuario'] == 'PF') : ?>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="consultar_pagos.php">Consultar pagos</a>
+                            </li>
+                        <?php endif; ?>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="logout.php">Salir</a>
+                        </li>
+                    <?php else : ?>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="registrarse.php">Registrarse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="iniciar_sesion.php">Iniciar sesión</a>
+                        </li>
+                    <?php endif; ?>
+
+                </ul>
+
+            </div>
+        </div>
     </nav>
-    <header>
-        <h1>Instituto México</h1>
-    </header>
-    <div style="max-width: 10%">
-        <img src="https://edutory.mx/wp-content/uploads/2023/02/instituto-mexico-secundaria-ims-logo-1006x1024.png" />
-    </div>
+
+
     <div class="container">
-        <h1>Bienvenido <?php echo $_SESSION['usuario'] ?></h1>
-        <p>Usted ha iniciado sesión como <?php echo $_SESSION['tipoUsuario'] ?></p>
+
+        <div style="max-width: 10%; margin: 0 auto;">
+            <img src="https://edutory.mx/wp-content/uploads/2023/02/instituto-mexico-secundaria-ims-logo-1006x1024.png" />
+        </div>
+        <div>
+            <h1>Bienvenido <?php echo $_SESSION['usuario'] ?></h1>
+            <p>Usted ha iniciado sesión como <?php echo $_SESSION['tipoUsuario'] ?></p>
 
 
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
